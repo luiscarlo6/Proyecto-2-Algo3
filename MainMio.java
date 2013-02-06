@@ -1,267 +1,326 @@
 
-public class Main {
+public class MainMio {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		Nodo A;
-		Arco B;
-		int max = 100;
+
+//		String lectura = "S...****.................***D";
+		String lectura = "S.......D";
 		long tiempoInicio = System.currentTimeMillis();
-		Graph grafo = llenar(true,true,max);
+		Graph grafo = llenar(lectura);
 		long totalTiempo = System.currentTimeMillis() - tiempoInicio;
 		System.out.println("El tiempo de demora para llenar es :" + totalTiempo + " miliseg");
-
-//		for (int i = 0; i < max; i++) {
-//		    Nodo n = new Nodo("Nodo_"+i);
-////		    grafo.remove(n);
-//		    System.out.println("contains nodo:"+n.toString()+" "+grafo.contains(n));
-//		}
+		Cola<Nodo> cola = new Cola<Nodo>();
 		
-//		for (int i = 0; i < max; i += 2) {
-//		    Nodo n1 = new Nodo("Nodo_"+i);
-//
-//		    for (int j = 1; j < max; j += 2) {
-//
-//		    Nodo n2 = new Nodo("Nodo_"+j);
-//			Arco a = new Arco(n1.toString(), n2.toString());
-//			grafo.remove(a);
-//			System.out.println("contains arco:"+a.toString()+" "+grafo.contains(a));
-//		    }
-//		}
 		
-		tiempoInicio = System.currentTimeMillis();
-		Lista<Nodo> listaNodo = grafo.getNodos();
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para getNodos es :" + totalTiempo + " miliseg");
+		BFS(grafo);
+		Nodo D = grafo.get(new Nodo("D"));
+		try{
+			System.out.println(D.horas());}catch(java.lang.NullPointerException as){
+			
+		}
+		
+//		tiempoInicio = System.currentTimeMillis();
+//		Lista<Nodo> listaNodo = grafo.getNodos();
+//		totalTiempo = System.currentTimeMillis() - tiempoInicio;
+//		System.out.println("El tiempo de demora para getNodos es :" + totalTiempo + " miliseg");
 //		ListIterator<Nodo> it = ((MiLista<Nodo>) listaNodo).iterator();
-//		for (int i = 0; i < max; i++){
+//		for (int i = 0; i < listaNodo.getSize(); i++){
 //			A = it.next();
-//			System.out.println(A.toString());
+////			System.out.println(A.toString()+" "+A.horasTipo());
+//			cola.encolar(A);
 //		}
-		
-		tiempoInicio = System.currentTimeMillis();
-		Lista<Arco> listaArco = grafo.getArcos();
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para getArcos es :" + totalTiempo + " miliseg");
-//		ListIterator<Arco> it2 = ((MiLista<Arco>) listaArco).iterator();
-//		for (int i = 0; i < listaArco.getSize(); i++){
-//			B = it2.next();
-//			System.out.println(B.toString());
-//		}
-		
-		tiempoInicio = System.currentTimeMillis();
-		Lista<Nodo> listaPred = grafo.getPred(new Nodo("Nodo_1"));
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para getPred es :" + totalTiempo + " miliseg");
-//		ListIterator<Nodo> it3 = ((MiLista<Nodo>) listaPred).iterator();
-//		for (int i = 0; i < listaPred.getSize(); i++){
-//			A = it3.next();
-//			System.out.println(A.toString());
-//		}
-		
-		tiempoInicio = System.currentTimeMillis();
-		Lista<Nodo> listaSuc = grafo.getSuc(new Nodo("Nodo_0"));
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para getSuc es :" + totalTiempo + " miliseg");
-//		ListIterator<Nodo> it4 = ((MiLista<Nodo>) listaSuc).iterator();
-//		for (int i = 0; i < listaSuc.getSize(); i++){
-//			A = it4.next();
-//			System.out.println(A.toString());
-//		}
-		
-		tiempoInicio = System.currentTimeMillis();
-		Lista<Arco> listaIn = grafo.getIn(new Nodo("Nodo_1"));
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para getIn es :" + totalTiempo + " miliseg");
-//		ListIterator<Arco> it5 = ((MiLista<Arco>) listaIn).iterator();
-//		for (int i = 0; i < listaIn.getSize(); i++){
-//			B = it5.next();
-//			System.out.println(B.toString());
-//		}
-		
-		tiempoInicio = System.currentTimeMillis();
-		Lista<Arco> listaOut = grafo.getOut(new Nodo("Nodo_0"));
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-//		System.out.println("El tiempo de demora para getOut es :" + totalTiempo + " miliseg");
-//		ListIterator<Arco> it6 = ((MiLista<Arco>) listaOut).iterator();
-//		for (int i = 0; i < listaOut.getSize(); i++){
-//			B = it6.next();
-//			System.out.println(B.toString());
-//		}
-		
-		
-		tiempoInicio = System.currentTimeMillis();
-		String grafoS = grafo.toString();
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para toString es :" + totalTiempo + " miliseg");
-//		System.out.println(grafo.toString());
-		
-		
-		tiempoInicio = System.currentTimeMillis();
-		Graph nuevoG = (Graph) grafo.clone();
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para clone es :" + totalTiempo + " miliseg");
 
-		
 		System.out.println("Arcos: "+grafo.getNumArcos()+" Nodos: "+grafo.getNumNodos()+ " Colisiones: "+grafo.colisiones()+ " "+ (grafo.colisiones()*1.0 / grafo.getNumNodos())*100+"%");
 //		long totalTiempo = System.currentTimeMillis() - tiempoInicio;
 //		System.out.println("El tiempo de demora es :" + totalTiempo + " miliseg");
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		tiempoInicio = System.currentTimeMillis();
-		grafo = llenar(false,true,max);
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para llenar es :" + totalTiempo + " miliseg");
+	}
 
-//		for (int i = 0; i < max; i++) {
-//		    Nodo n = new Nodo("Nodo_"+i);
-////		    grafo.remove(n);
-//		    System.out.println("contains nodo:"+n.toString()+" "+grafo.contains(n));
-//		}
-		
-//		for (int i = 0; i < max; i += 2) {
-//		    Nodo n1 = new Nodo("Nodo_"+i);
-//
-//		    for (int j = 1; j < max; j += 2) {
-//
-//		    Nodo n2 = new Nodo("Nodo_"+j);
-//			Arco a = new Arco(n1.toString(), n2.toString());
-//			grafo.remove(a);
-//			System.out.println("contains arco:"+a.toString()+" "+grafo.contains(a));
-//		    }
-//		}
-		
-		tiempoInicio = System.currentTimeMillis();
-		listaNodo = grafo.getNodos();
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para getNodos es :" + totalTiempo + " miliseg");
-//		ListIterator<Nodo> it = ((MiLista<Nodo>) listaNodo).iterator();
-//		for (int i = 0; i < max; i++){
-//			A = it.next();
-//			System.out.println(A.toString());
-//		}
-		
-		tiempoInicio = System.currentTimeMillis();
-		listaArco = grafo.getArcos();
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para getArcos es :" + totalTiempo + " miliseg");
-//		ListIterator<Arco> it2 = ((MiLista<Arco>) listaArco).iterator();
-//		for (int i = 0; i < listaArco.getSize(); i++){
-//			B = it2.next();
-//			System.out.println(B.toString());
-//		}
-		
-		tiempoInicio = System.currentTimeMillis();
-		listaPred = grafo.getPred(new Nodo("Nodo_1"));
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para getPred es :" + totalTiempo + " miliseg");
-//		ListIterator<Nodo> it3 = ((MiLista<Nodo>) listaPred).iterator();
-//		for (int i = 0; i < listaPred.getSize(); i++){
-//			A = it3.next();
-//			System.out.println(A.toString());
-//		}
-		
-		tiempoInicio = System.currentTimeMillis();
-		listaSuc = grafo.getSuc(new Nodo("Nodo_0"));
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para getSuc es :" + totalTiempo + " miliseg");
-//		ListIterator<Nodo> it4 = ((MiLista<Nodo>) listaSuc).iterator();
-//		for (int i = 0; i < listaSuc.getSize(); i++){
-//			A = it4.next();
-//			System.out.println(A.toString());
-//		}
-		
-		tiempoInicio = System.currentTimeMillis();
-		listaIn = grafo.getIn(new Nodo("Nodo_1"));
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para getIn es :" + totalTiempo + " miliseg");
-//		ListIterator<Arco> it5 = ((MiLista<Arco>) listaIn).iterator();
-//		for (int i = 0; i < listaIn.getSize(); i++){
-//			B = it5.next();
-//			System.out.println(B.toString());
-//		}
-		
-		tiempoInicio = System.currentTimeMillis();
-		listaOut = grafo.getOut(new Nodo("Nodo_0"));
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-//		System.out.println("El tiempo de demora para getOut es :" + totalTiempo + " miliseg");
-//		ListIterator<Arco> it6 = ((MiLista<Arco>) listaOut).iterator();
-//		for (int i = 0; i < listaOut.getSize(); i++){
-//			B = it6.next();
-//			System.out.println(B.toString());
-//		}
-		
-		
-		tiempoInicio = System.currentTimeMillis();
-		grafoS = grafo.toString();
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para toString es :" + totalTiempo + " miliseg");
-//		System.out.println(grafo.toString());
-		
-		
-		tiempoInicio = System.currentTimeMillis();
-		nuevoG = (Graph) grafo.clone();
-		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-		System.out.println("El tiempo de demora para clone es :" + totalTiempo + " miliseg");
 
+	
+	
+	public static void BFS(Graph grafo){
+		Cola<Nodo> cola = new Cola<Nodo>();
+		Nodo S = grafo.get(new Nodo("S"));
+		S.cambiarHoras(0);
+		int hora = 6;
+		int horasCaminadas = 0;
+		cola.encolar(S);
 		
-		System.out.println("Arcos: "+grafo.getNumArcos()+" Nodos: "+grafo.getNumNodos()+ " Colisiones: "+grafo.colisiones()+ " "+ (grafo.colisiones()*1.0 / grafo.getNumNodos())*100+"%");
-//		long totalTiempo = System.currentTimeMillis() - tiempoInicio;
-//		System.out.println("El tiempo de demora es :" + totalTiempo + " miliseg");
+		while (!cola.esVacia()){
+			Nodo n = cola.primero();
+			cola.desencolar();
+			
+			Lista<Nodo> sucesores = grafo.getSuc(n);
+			ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
+			
+//			while ((horasCaminadas == 16 || nocheYProxBosque(grafo,n))&&n.esCaminable()){
+//				
+//				quitarMasCercano(grafo,n);
+//				horasCaminadas = 0;
+//			}
+			
+			int i = 0;
+			while (i!=sucesores.getSize()){
+				Nodo m = (Nodo)it.next();
+				m = grafo.get(m);
+				
+				if (!m.visitado()){
+					m.setVisitado(true);
+					m.cambiarHoras(n.horas()+m.horasTipo());
+					m.cambiarAnterior(n);
+					cola.encolar(m);				
+				}				
+				i++;
+			}
+			if (n.esCaminable()&&!n.equals(S)){
+				hora = (n.horas()+6)%24;
+				
+				if (n.horas()-n.getAnt().horas()>1){
+					horasCaminadas = 0;
+				}
+				else{
+					horasCaminadas++;
+				}
+				
+			}
+		}
+		
 	}
 	
-	
-	private static Graph llenar(boolean lista, boolean hacerEq, int maxN) {
-		Graph d1 = null;
+	private static Graph llenar(String entr) {
+		Graph grafo = new DiGraphHash();
 
-		if (lista)
-		    d1 = new DiGraphHash();
-		else
-		    d1 = new DiGraphMatriz();
-
-		for (int i = 0; i < maxN; i++) {
-		    Nodo n = new Nodo("Nodo_"+i);
-		    d1.add(n);
-//		    System.out.println("add "+n.toString()+" "+d1.add(n));
-		    
-		}
-		int p=0;
-		for (int i = 0; i < maxN; i += 2) {
-		    Nodo n1 = new Nodo("Nodo_"+i);
-
-		    for (int j = 1; j < maxN; j += 2) {
-			Nodo n2 = new Nodo("Nodo_"+j);
-			Arco a = new Arco(n1.toString(), n2.toString());
-			p++;
-			boolean b1 = false;
-			boolean b2 = false;
-
-			if (lista)
-			    b2 = d1.add((Arco) a.clone());
-			else if (hacerEq)
-			    b2 = d1.add((Arco) a.clone());
-			else
-			    if ((i!=2) || (j != 3))
-				b2 = d1.add((Arco) a.clone());
+		int len = entr.length();
+		Nodo A,B;
+		char lect[] = entr.toCharArray();
+		A = new Nodo(java.lang.Character.toString(lect[0]));
+		grafo.add(A);
+		B = A;
+		for (int i=1;i!=len-1;i++){
+			String tipo = "";
+			if (java.lang.Character.toString(lect[i]).equalsIgnoreCase(".")){
+				tipo = "Llanura";
+			}
+			if (java.lang.Character.toString(lect[i]).equalsIgnoreCase("*")){
+				tipo = "Selva";
+				
+			}
+			A = new Nodo(tipo+i);
+			grafo.add(A);
+			Nodo A1,A2,A3;
+			A1 = new Nodo(tipo+i+"_d1");
+			A2 = new Nodo(tipo+i+"_d2");
+			A3 = new Nodo(tipo+i+"_d3");
 			
-//					System.out.printf("Agregando %s %s\n" , a, b2);
+			grafo.add(A1);
+			grafo.add(A2);
+			grafo.add(A3);
+			
+			Arco arco;
+			arco = new Arco(B.toString(),A.toString());
+			grafo.add(arco);
+			
+			arco = new Arco(B.toString(),A1.toString());
+			grafo.add(arco);
+			
+			arco = new Arco(B.toString(),A2.toString());
+			grafo.add(arco);
+			
+			arco = new Arco(A2.toString(),A3.toString());
+			grafo.add(arco);
+			
+			arco = new Arco(A1.toString(),A.toString());
+			grafo.add(arco);
+			
+			arco = new Arco(A3.toString(),A.toString());
+			grafo.add(arco);
+			
+			B = A;
+		}
+		
+		A = new Nodo(java.lang.Character.toString(lect[len-1]));
+		grafo.add(A);
+		Nodo A1,A2,A3;
+		A1 = new Nodo(java.lang.Character.toString(lect[len-1])+"d1");
+		A2 = new Nodo(java.lang.Character.toString(lect[len-1])+"d2");
+		A3 = new Nodo(java.lang.Character.toString(lect[len-1])+"d3");
+		
+		grafo.add(A1);
+		grafo.add(A2);
+		grafo.add(A3);
+		
+		Arco arco;
+		arco = new Arco(B.toString(),A.toString());
+		grafo.add(arco);
+		
+		arco = new Arco(B.toString(),A1.toString());
+		grafo.add(arco);
+		
+		arco = new Arco(B.toString(),A2.toString());
+		grafo.add(arco);
+		
+		arco = new Arco(A2.toString(),A3.toString());
+		grafo.add(arco);
+		
+		arco = new Arco(A1.toString(),A.toString());
+		grafo.add(arco);
+		
+		arco = new Arco(A3.toString(),A.toString());
+		grafo.add(arco);
+		
+		B = A;
+
+		return grafo;
+	}
+	
+	private static void sort(Object arr[]) {
+		// // yo si puedo hacer burbuja :-D
+
+		// for (int i = 0; i < arr.length - 1; i++) {
+		//     for (int j = i + 1; j < arr.length; j++) {
+		// 	if (arr[i].toString().compareTo(arr[j].toString()) > 0) {
+		// 	    Object o = null;
+		// 	    o = arr[i];
+		// 	    arr[i]= arr[j];
+		// 	    arr[j]= o;
+		// 	}
+		//     }
+		// }
+
+		quick_srt(arr, 0, arr.length-1);
+		
+	    }
+	
+	
+	public static void quick_srt(Object array[],int low, int n){
+		int lo = low;
+		int hi = n;
+		if (lo >= n) {
+		    return;
+		}
+		Object mid = array[(lo + hi) / 2];
+		while (lo < hi) {
+		    while (lo<hi && array[lo].toString().compareTo(mid.toString()) < 0) {
+			lo++;
+		    }
+		    while (lo<hi && array[hi].toString().compareTo(mid.toString()) > 0) {
+			hi--;
+		    }
+		    if (lo < hi) {
+			Object T = array[lo];
+			array[lo] = array[hi];
+			array[hi] = T;
 		    }
 		}
-		System.out.println(p);
-		return d1;
-	    }
+		if (hi < lo) {
+		    int T = hi;
+		    hi = lo;
+		    lo = T;
+		}
+		quick_srt(array, low, lo);
+		quick_srt(array, lo == low ? lo+1 : lo, n);
+    }
+	
+	public static boolean nocheYProxBosque(Graph grafo, Nodo n){
+		int hora = (n.horas()+6)%24;
+		boolean noche = hora>=18 && hora<6;
+		Nodo B;
+		if (!noche){
+			return false;
+		}
+		boolean proxBosque = false;
+		Lista<Nodo> sucesores = grafo.getSuc(n);
+		ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
+		
+		if(sucesores.getSize()==3){
+			int i = 0;
+			while (i!=sucesores.getSize()){
+				Nodo A = (Nodo) it.next();
+				if (A.esCaminable()&&A.toString().contains("Bosque")){
+					return true;
+				}
+				i++;
+			}
+				
+		}
+		
+		if(sucesores.getSize()==2){
+			hora = (n.horas()+8+6)%24;
+			noche = hora>=18 && hora<6;
+			int i = 0;
+			while (i!=sucesores.getSize()){
+				Nodo A = (Nodo) it.next();
+				if (noche && A.toString().contains("Bosque")&&A.toString().contains("d1")){
+					return true;
+				}
+				i++;
+			}
+				
+		}
+		
+		if(sucesores.getSize()==1){
+			hora = (n.horas()+16+6)%24;
+			noche = hora>=18 && hora<6;
+			int i = 0;
+			while (i!=sucesores.getSize()){
+				Nodo A = (Nodo) it.next();
+				if (noche && A.toString().contains("Bosque")&&A.toString().contains("d2")){
+					return true;
+				}
+				i++;
+			}
+				
+		}
+		
+		return false;
+	}
+	
+	public static void quitarMasCercano(Graph grafo,Nodo n){
+		Lista<Nodo> sucesores = grafo.getSuc(n);
+		ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
 
+		
+		if(sucesores.getSize()==3){
+			int i = 0;
+			while (i!=sucesores.getSize()){
+				Nodo A = (Nodo) it.next();
+				if (A.esCaminable()){
+					grafo.remove(new Arco(n.toString(),A.toString()));
+				}
+				i++;
+			}
+				
+		}
+		
+		if(sucesores.getSize()==2){
+			int i = 0;
+			while (i!=sucesores.getSize()){
+				Nodo A = (Nodo) it.next();
+				if (A.toString().contains("d1")){
+					grafo.remove(new Arco(n.toString(),A.toString()));
+				}
+				i++;
+			}
+				
+		}
+		
+		if(sucesores.getSize()==1){
+			int i = 0;
+			while (i!=sucesores.getSize()){
+				Nodo A = (Nodo) it.next();
+				if (A.toString().contains("d2")){
+					grafo.remove(new Arco(n.toString(),A.toString()));
+				}
+				i++;
+			}
+				
+		}
+	}
 }
 
