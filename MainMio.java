@@ -8,7 +8,8 @@ public class MainMio {
 		Nodo A;
 
 //		String lectura = "S...****.................***D";
-		String lectura = "S.......D";
+		String lectura = "S...................................D";
+//		String lectura = "S.......D";
 		long tiempoInicio = System.currentTimeMillis();
 		Graph grafo = llenar(lectura);
 		long totalTiempo = System.currentTimeMillis() - tiempoInicio;
@@ -44,6 +45,7 @@ public class MainMio {
 
 	
 	
+	@SuppressWarnings("rawtypes")
 	public static void BFS(Graph grafo){
 		Cola<Nodo> cola = new Cola<Nodo>();
 		Nodo S = grafo.get(new Nodo("S"));
@@ -56,14 +58,15 @@ public class MainMio {
 			Nodo n = cola.primero();
 			cola.desencolar();
 			
+
+			if (horasCaminadas == 16 && n.esCaminable()){
+				System.out.println(n.toString());
+				dormir(grafo,n);
+				horasCaminadas = 0;
+			}
+			
 			Lista<Nodo> sucesores = grafo.getSuc(n);
 			ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
-			
-//			while ((horasCaminadas == 16 || nocheYProxBosque(grafo,n))&&n.esCaminable()){
-//				
-//				quitarMasCercano(grafo,n);
-//				horasCaminadas = 0;
-//			}
 			
 			int i = 0;
 			while (i!=sucesores.getSize()){
@@ -80,14 +83,12 @@ public class MainMio {
 			}
 			if (n.esCaminable()&&!n.equals(S)){
 				hora = (n.horas()+6)%24;
-				
 				if (n.horas()-n.getAnt().horas()>1){
 					horasCaminadas = 0;
 				}
 				else{
 					horasCaminadas++;
 				}
-				
 			}
 		}
 		
@@ -227,100 +228,32 @@ public class MainMio {
 		quick_srt(array, lo == low ? lo+1 : lo, n);
     }
 	
-	public static boolean nocheYProxBosque(Graph grafo, Nodo n){
-		int hora = (n.horas()+6)%24;
-		boolean noche = hora>=18 && hora<6;
-		Nodo B;
-		if (!noche){
-			return false;
-		}
-		boolean proxBosque = false;
+	public static int dormir (Graph grafo, Nodo n){
 		Lista<Nodo> sucesores = grafo.getSuc(n);
 		ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
-		
-		if(sucesores.getSize()==3){
-			int i = 0;
-			while (i!=sucesores.getSize()){
-				Nodo A = (Nodo) it.next();
-				if (A.esCaminable()&&A.toString().contains("Bosque")){
-					return true;
-				}
-				i++;
-			}
-				
-		}
-		
-		if(sucesores.getSize()==2){
-			hora = (n.horas()+8+6)%24;
-			noche = hora>=18 && hora<6;
-			int i = 0;
-			while (i!=sucesores.getSize()){
-				Nodo A = (Nodo) it.next();
-				if (noche && A.toString().contains("Bosque")&&A.toString().contains("d1")){
-					return true;
-				}
-				i++;
-			}
-				
-		}
-		
-		if(sucesores.getSize()==1){
-			hora = (n.horas()+16+6)%24;
-			noche = hora>=18 && hora<6;
-			int i = 0;
-			while (i!=sucesores.getSize()){
-				Nodo A = (Nodo) it.next();
-				if (noche && A.toString().contains("Bosque")&&A.toString().contains("d2")){
-					return true;
-				}
-				i++;
-			}
-				
-		}
-		
-		return false;
-	}
-	
-	public static void quitarMasCercano(Graph grafo,Nodo n){
-		Lista<Nodo> sucesores = grafo.getSuc(n);
-		ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
+		int sal = 0;
+		int i = 0;
 
-		
-		if(sucesores.getSize()==3){
-			int i = 0;
-			while (i!=sucesores.getSize()){
-				Nodo A = (Nodo) it.next();
-				if (A.esCaminable()){
-					grafo.remove(new Arco(n.toString(),A.toString()));
-				}
-				i++;
+		while (i!=sucesores.getSize()){
+			Nodo A = (Nodo) it.next();
+			if(sucesores.getSize()==3 && A.esCaminable()){
+				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
+				sal = 1;
 			}
-				
-		}
-		
-		if(sucesores.getSize()==2){
-			int i = 0;
-			while (i!=sucesores.getSize()){
-				Nodo A = (Nodo) it.next();
-				if (A.toString().contains("d1")){
-					grafo.remove(new Arco(n.toString(),A.toString()));
-				}
-				i++;
+			
+			if(sucesores.getSize()==2 && A.toString().contains("d1")){
+				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
+				sal = 2;
 			}
-				
-		}
-		
-		if(sucesores.getSize()==1){
-			int i = 0;
-			while (i!=sucesores.getSize()){
-				Nodo A = (Nodo) it.next();
-				if (A.toString().contains("d2")){
-					grafo.remove(new Arco(n.toString(),A.toString()));
-				}
-				i++;
+			
+			if(sucesores.getSize()==3 && A.toString().contains("d2")){
+				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
+				sal = 3;
 			}
-				
+			i++;
 		}
+		return sal;
+		
 	}
 }
 
