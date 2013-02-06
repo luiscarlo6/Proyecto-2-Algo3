@@ -35,7 +35,7 @@ public class MainMio {
 //			cola.encolar(A);
 //		}
 
-		System.out.println("Arcos: "+grafo.getNumArcos()+" Nodos: "+grafo.getNumNodos()+ " Colisiones: "+grafo.colisiones()+ " "+ (grafo.colisiones()*1.0 / grafo.getNumNodos())*100+"%");
+		System.out.println(grafo.getNumNodos()+" Nodos, "+grafo.getNumArcos()+" Arcos, "+grafo.colisiones()+ " Colisiones, "+ (grafo.colisiones()*1.0 / grafo.getNumNodos())*100+"%");
 //		long totalTiempo = System.currentTimeMillis() - tiempoInicio;
 //		System.out.println("El tiempo de demora es :" + totalTiempo + " miliseg");
 		
@@ -60,7 +60,6 @@ public class MainMio {
 			
 
 			if (horasCaminadas == 16 && n.esCaminable()){
-				System.out.println(n.toString());
 				dormir(grafo,n);
 				horasCaminadas = 0;
 			}
@@ -254,6 +253,34 @@ public class MainMio {
 		}
 		return sal;
 		
+	}
+	
+	public static boolean esDeNocheYSig(Graph grafo, Nodo n){
+		
+		Lista<Nodo> sucesores = grafo.getSuc(n);
+		ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
+		boolean sal = false;
+		int i = 0;
+
+		while (i!=sucesores.getSize()){
+			Nodo A = (Nodo) it.next();
+			if(sucesores.getSize()==3 && A.esCaminable()){
+				sal = A.toString().contains("Bosque");
+			}
+			
+			if(sucesores.getSize()==2 && A.toString().contains("d1")){
+				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
+				sal = A.toString().contains("Bosque");
+			}
+			
+			if(sucesores.getSize()==3 && A.toString().contains("d2")){
+				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
+				sal = A.toString().contains("Bosque");
+			}
+			i++;
+		}
+		
+		return sal;
 	}
 }
 

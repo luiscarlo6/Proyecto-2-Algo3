@@ -629,7 +629,8 @@ public class DiGraphHash implements Graph{
    * Retorna el nodo n. Si no existe dicho nodo, 
    * retorna null.
    */
-  public Nodo get(Nodo n){
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+public Nodo get(Nodo n){
 	  if (n==null){
 		  return null;
 	  }
