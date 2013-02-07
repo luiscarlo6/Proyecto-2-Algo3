@@ -53,4 +53,6 @@ public interface Lista<E> {
 	*/
   public Object[] toArray();
   
+  public String toString();
+  
 }

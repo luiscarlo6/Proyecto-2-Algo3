@@ -7,9 +7,9 @@ public class MainMio {
 	public static void main(String[] args) {
 		Nodo A;
 
-//		String lectura = "S...****.................***D";
-		String lectura = "S...................................D";
+		String lectura = "S...****.................***D";
 //		String lectura = "S.......D";
+//		String lectura = "S***********.***********D";
 		long tiempoInicio = System.currentTimeMillis();
 		Graph grafo = llenar(lectura);
 		long totalTiempo = System.currentTimeMillis() - tiempoInicio;
@@ -56,10 +56,10 @@ public class MainMio {
 		
 		while (!cola.esVacia()){
 			Nodo n = cola.primero();
-			cola.desencolar();
+			cola.desencolar();			
+			boolean noche = hora>=18 && hora<6;
 			
-
-			if (horasCaminadas == 16 && n.esCaminable()){
+			if (((horasCaminadas == 15) && n.esLlanura() || esDeNocheYSigBosque(grafo,n)) && n.esCaminable()){
 				dormir(grafo,n);
 				horasCaminadas = 0;
 			}
@@ -241,13 +241,23 @@ public class MainMio {
 			}
 			
 			if(sucesores.getSize()==2 && A.toString().contains("d1")){
-				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
+				grafo.remove(A);
+//				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
 				sal = 2;
 			}
 			
-			if(sucesores.getSize()==3 && A.toString().contains("d2")){
-				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
+			if(sucesores.getSize()==1 && A.toString().contains("d2")){
+				grafo.remove(A);
+//				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
 				sal = 3;
+			}
+
+			
+			if(sucesores.getSize()==0){
+				grafo.remove(new Nodo("D"));
+				grafo.add(new Nodo("D"));
+//				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
+				sal = 4;
 			}
 			i++;
 		}
@@ -255,27 +265,31 @@ public class MainMio {
 		
 	}
 	
-	public static boolean esDeNocheYSig(Graph grafo, Nodo n){
+	public static boolean esDeNocheYSigBosque(Graph grafo, Nodo n){
 		
 		Lista<Nodo> sucesores = grafo.getSuc(n);
 		ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
 		boolean sal = false;
 		int i = 0;
+		int hora = (n.horas() + 6) % 24;
 
 		while (i!=sucesores.getSize()){
 			Nodo A = (Nodo) it.next();
 			if(sucesores.getSize()==3 && A.esCaminable()){
-				sal = A.toString().contains("Bosque");
+				
+				sal = A.toString().contains("Bosque") && hora >=18 && hora<6;
 			}
 			
 			if(sucesores.getSize()==2 && A.toString().contains("d1")){
-				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
-				sal = A.toString().contains("Bosque");
+				hora = (hora + A.horas())%24 ;
+				sal = A.toString().contains("Bosque")  && hora >=18 && hora<6;
 			}
 			
 			if(sucesores.getSize()==3 && A.toString().contains("d2")){
-				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
-				sal = A.toString().contains("Bosque");
+				Lista<Nodo> sucs = grafo.getSuc(n);
+				Nodo sig = (Nodo) sucs.get();
+				hora = (hora + A.horas()+sig.horas())%24 ;
+				sal = A.toString().contains("Bosque")  && hora >=18 && hora<6;
 			}
 			i++;
 		}

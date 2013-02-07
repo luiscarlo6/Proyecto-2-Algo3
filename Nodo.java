@@ -111,7 +111,7 @@ public class Nodo {
   }
   
   public boolean esCaminable(){
-	  if (this.id.contains("d1")||this.id.contains("d2")||this.id.contains("d3")){
+	  if (this.id.contains("_")){
 		  return false;
 	  }
 	  return true;
@@ -123,6 +123,10 @@ public class Nodo {
   
   public Nodo getAnt(){
 	  return this.anterior;
+  }
+  
+  public boolean esLlanura(){
+	  return this.esCaminable() && this.id.contains("Llanura");
   }
 } /*Fin de nodo*/
 

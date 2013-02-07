@@ -34,4 +34,8 @@ public class Cola<E> {
 	public int tam(){
 		return this.lista.getSize();
 	}
+	
+	public String toString(){
+		return this.lista.toString();
+	}
 }

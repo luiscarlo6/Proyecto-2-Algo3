@@ -215,6 +215,25 @@ public class MiLista<E> implements Lista<E>{
 	 return new LisIter(this);
   }
   
+  public String toString(){
+	  if (this==null){
+			return "";
+		 }
+		 if (this.tam==0){
+			return "";
+		 }
+		 
+		 String Slista = new String("");
+		 int i = 0;
+		 Caja<E> e = this.getCaja();
+		 while (i!=this.tam){
+			Slista = Slista+"\n"+e.toString();
+			i ++;
+			e = e.cajaSig();
+		 }
+		 return Slista;
+  }
+  
   
   /**
 	* Clase privada para el uso de la lista
