@@ -5,9 +5,9 @@ public class MainMio {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		String lectura = "S...****.................***D";
+		String lectura = "S...****.................***D";
 //		String lectura = "S.......D";
-		String lectura = "S***********.***********D";
+//		String lectura = "S***********.***********D";
 		long tiempoInicio = System.currentTimeMillis();
 		Graph grafo = llenar(lectura);
 		long totalTiempo = System.currentTimeMillis() - tiempoInicio;
@@ -175,54 +175,7 @@ public class MainMio {
 		return grafo;
 	}
 	
-	private static void sort(Object arr[]) {
-		// // yo si puedo hacer burbuja :-D
-
-		// for (int i = 0; i < arr.length - 1; i++) {
-		//     for (int j = i + 1; j < arr.length; j++) {
-		// 	if (arr[i].toString().compareTo(arr[j].toString()) > 0) {
-		// 	    Object o = null;
-		// 	    o = arr[i];
-		// 	    arr[i]= arr[j];
-		// 	    arr[j]= o;
-		// 	}
-		//     }
-		// }
-
-		quick_srt(arr, 0, arr.length-1);
-		
-	    }
-	
-	
-	public static void quick_srt(Object array[],int low, int n){
-		int lo = low;
-		int hi = n;
-		if (lo >= n) {
-		    return;
-		}
-		Object mid = array[(lo + hi) / 2];
-		while (lo < hi) {
-		    while (lo<hi && array[lo].toString().compareTo(mid.toString()) < 0) {
-			lo++;
-		    }
-		    while (lo<hi && array[hi].toString().compareTo(mid.toString()) > 0) {
-			hi--;
-		    }
-		    if (lo < hi) {
-			Object T = array[lo];
-			array[lo] = array[hi];
-			array[hi] = T;
-		    }
-		}
-		if (hi < lo) {
-		    int T = hi;
-		    hi = lo;
-		    lo = T;
-		}
-		quick_srt(array, low, lo);
-		quick_srt(array, lo == low ? lo+1 : lo, n);
-    }
-	
+	@SuppressWarnings("rawtypes")
 	public static boolean dormir(Graph grafo, Nodo n){
 		Lista<Nodo> sucesores = grafo.getSuc(n);
 		ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
@@ -275,6 +228,7 @@ public class MainMio {
 	}
 	
 
+	@SuppressWarnings("rawtypes")
 	public static boolean sigBosque(Graph grafo, Nodo n){
 		Lista<Nodo> sucesores = grafo.getSuc(n);
 		ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
@@ -319,6 +273,7 @@ public class MainMio {
 		return sal;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public static int horaFutura(Graph grafo,Nodo n){
 		Lista<Nodo> sucesores = grafo.getSuc(n);
 		ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
