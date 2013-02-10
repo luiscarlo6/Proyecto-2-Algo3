@@ -5,39 +5,23 @@ public class MainMio {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Nodo A;
-
-		String lectura = "S...****.................***D";
+//		String lectura = "S...****.................***D";
 //		String lectura = "S.......D";
-//		String lectura = "S***********.***********D";
+		String lectura = "S***********.***********D";
 		long tiempoInicio = System.currentTimeMillis();
 		Graph grafo = llenar(lectura);
 		long totalTiempo = System.currentTimeMillis() - tiempoInicio;
 		System.out.println("El tiempo de demora para llenar es :" + totalTiempo + " miliseg");
-		Cola<Nodo> cola = new Cola<Nodo>();
-		
-		
-		BFS(grafo);
+		Nodo s = new Nodo("S");
+
+		BFS(grafo,s);
 		Nodo D = grafo.get(new Nodo("D"));
 		try{
 			System.out.println(D.horas());}catch(java.lang.NullPointerException as){
 			
 		}
-		
-//		tiempoInicio = System.currentTimeMillis();
-//		Lista<Nodo> listaNodo = grafo.getNodos();
-//		totalTiempo = System.currentTimeMillis() - tiempoInicio;
-//		System.out.println("El tiempo de demora para getNodos es :" + totalTiempo + " miliseg");
-//		ListIterator<Nodo> it = ((MiLista<Nodo>) listaNodo).iterator();
-//		for (int i = 0; i < listaNodo.getSize(); i++){
-//			A = it.next();
-////			System.out.println(A.toString()+" "+A.horasTipo());
-//			cola.encolar(A);
-//		}
 
 		System.out.println(grafo.getNumNodos()+" Nodos, "+grafo.getNumArcos()+" Arcos, "+grafo.colisiones()+ " Colisiones, "+ (grafo.colisiones()*1.0 / grafo.getNumNodos())*100+"%");
-//		long totalTiempo = System.currentTimeMillis() - tiempoInicio;
-//		System.out.println("El tiempo de demora es :" + totalTiempo + " miliseg");
 		
 		
 	}
@@ -46,23 +30,41 @@ public class MainMio {
 	
 	
 	@SuppressWarnings("rawtypes")
-	public static void BFS(Graph grafo){
+	public static void BFS(Graph grafo, Nodo s){
 		Cola<Nodo> cola = new Cola<Nodo>();
-		Nodo S = grafo.get(new Nodo("S"));
-		S.cambiarHoras(0);
-		int hora = 6;
+		s = grafo.get(s);
+		s.cambiarHoras(0);
+		s.setVisitado(true);
 		int horasCaminadas = 0;
-		cola.encolar(S);
+		cola.encolar(s);
 		
 		while (!cola.esVacia()){
 			Nodo n = cola.primero();
-			cola.desencolar();			
-			boolean noche = hora>=18 && hora<6;
-			
-			if (((horasCaminadas == 15) && n.esLlanura() || esDeNocheYSigBosque(grafo,n)) && n.esCaminable()){
-				dormir(grafo,n);
-				horasCaminadas = 0;
+			cola.desencolar();
+			int hora = horaFutura(grafo,n);
+			boolean nocheFutura = ((hora>=18 &&hora<=23)|| (hora<6 && hora>=0));
+			int h = 0;
+			while (n.esCaminable()&&((horasCaminadas == 16) && n.esLlanura())||
+									(sigBosque(grafo,n) && nocheFutura)){
+
+				if (!nocheFutura || n.esLlanura()){
+					boolean durmio = dormir(grafo,n);
+					if (durmio){
+						horasCaminadas = 0;	
+					}
+				}
+
+				hora = horaFutura(grafo,n);
+				nocheFutura = ((hora>=18 &&hora<=23)||(hora<6 && hora>=0));
+				h++;
+				if (h>3){
+					cola.clear();
+					n = n.getAnt();
+					break;
+				}
 			}
+			
+			
 			
 			Lista<Nodo> sucesores = grafo.getSuc(n);
 			ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
@@ -80,14 +82,8 @@ public class MainMio {
 				}				
 				i++;
 			}
-			if (n.esCaminable()&&!n.equals(S)){
-				hora = (n.horas()+6)%24;
-				if (n.horas()-n.getAnt().horas()>1){
-					horasCaminadas = 0;
-				}
-				else{
-					horasCaminadas++;
-				}
+			if (n.esCaminable()&&!n.equals(s)){
+				horasCaminadas++;
 			}
 		}
 		
@@ -147,9 +143,9 @@ public class MainMio {
 		A = new Nodo(java.lang.Character.toString(lect[len-1]));
 		grafo.add(A);
 		Nodo A1,A2,A3;
-		A1 = new Nodo(java.lang.Character.toString(lect[len-1])+"d1");
-		A2 = new Nodo(java.lang.Character.toString(lect[len-1])+"d2");
-		A3 = new Nodo(java.lang.Character.toString(lect[len-1])+"d3");
+		A1 = new Nodo(java.lang.Character.toString(lect[len-1])+"_d1");
+		A2 = new Nodo(java.lang.Character.toString(lect[len-1])+"_d2");
+		A3 = new Nodo(java.lang.Character.toString(lect[len-1])+"_d3");
 		
 		grafo.add(A1);
 		grafo.add(A2);
@@ -227,74 +223,144 @@ public class MainMio {
 		quick_srt(array, lo == low ? lo+1 : lo, n);
     }
 	
-	public static int dormir (Graph grafo, Nodo n){
+	public static boolean dormir(Graph grafo, Nodo n){
 		Lista<Nodo> sucesores = grafo.getSuc(n);
 		ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
-		int sal = 0;
+		boolean sal = false;
 		int i = 0;
 
 		while (i!=sucesores.getSize()){
 			Nodo A = (Nodo) it.next();
 			if(sucesores.getSize()==3 && A.esCaminable()){
-				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
-				sal = 1;
+				sal = grafo.remove(new Arco (n.toString(),A.toString()));
 			}
 			
 			if(sucesores.getSize()==2 && A.toString().contains("d1")){
-				grafo.remove(A);
-//				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
-				sal = 2;
+				Lista<Nodo> sucesor_d1 = grafo.getSuc(A);
+				ListIterator it_d1 = ((MiLista<Nodo>) sucesor_d1).iterator();
+				Nodo B = (Nodo) it_d1.next();
+				if (B==null){
+					break;
+				}
+				
+				sal = grafo.remove(new Arco (n.toString(),A.toString())) && 
+					  grafo.remove(new Arco(A.toString(),B.toString()));
 			}
 			
 			if(sucesores.getSize()==1 && A.toString().contains("d2")){
-				grafo.remove(A);
-//				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
-				sal = 3;
+				Lista<Nodo> sucesor_d1 = grafo.getSuc(A);
+				ListIterator it_d1 = ((MiLista<Nodo>) sucesor_d1).iterator();
+				Nodo B = (Nodo) it_d1.next();
+				if (B==null){
+					break;
+				}
+				
+				Lista<Nodo> sucesor_d2 = grafo.getSuc(B);
+				ListIterator it_d2 = ((MiLista<Nodo>) sucesor_d2).iterator();
+				Nodo C = (Nodo) it_d2.next();
+				if (C==null){
+					break;
+				}
+				
+				sal = grafo.remove(new Arco (n.toString(),A.toString())) && 
+						grafo.remove(new Arco(A.toString(),B.toString()))&&
+						grafo.remove(new Arco(B.toString(),C.toString()));
 			}
-
 			
-			if(sucesores.getSize()==0){
-				grafo.remove(new Nodo("D"));
-				grafo.add(new Nodo("D"));
-//				boolean as = grafo.remove(new Arco (n.toString(),A.toString()));
-				sal = 4;
-			}
+			
 			i++;
 		}
 		return sal;
 		
 	}
 	
-	public static boolean esDeNocheYSigBosque(Graph grafo, Nodo n){
-		
+
+	public static boolean sigBosque(Graph grafo, Nodo n){
 		Lista<Nodo> sucesores = grafo.getSuc(n);
 		ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
 		boolean sal = false;
 		int i = 0;
-		int hora = (n.horas() + 6) % 24;
-
 		while (i!=sucesores.getSize()){
 			Nodo A = (Nodo) it.next();
 			if(sucesores.getSize()==3 && A.esCaminable()){
 				
-				sal = A.toString().contains("Bosque") && hora >=18 && hora<6;
+				sal = A.toString().contains("Selva");
 			}
 			
 			if(sucesores.getSize()==2 && A.toString().contains("d1")){
-				hora = (hora + A.horas())%24 ;
-				sal = A.toString().contains("Bosque")  && hora >=18 && hora<6;
+				Lista<Nodo> sucesor_d1 = grafo.getSuc(A);
+				ListIterator it_d1 = ((MiLista<Nodo>) sucesor_d1).iterator();
+				Nodo B = (Nodo) it_d1.next();
+				if (B==null){
+					break;
+				}
+				sal = B.toString().contains("Selva");
+
 			}
 			
-			if(sucesores.getSize()==3 && A.toString().contains("d2")){
-				Lista<Nodo> sucs = grafo.getSuc(n);
-				Nodo sig = (Nodo) sucs.get();
-				hora = (hora + A.horas()+sig.horas())%24 ;
-				sal = A.toString().contains("Bosque")  && hora >=18 && hora<6;
+			if(sucesores.getSize()==1 && A.toString().contains("d2")){
+				Lista<Nodo> sucesor_d1 = grafo.getSuc(A);
+				ListIterator it_d1 = ((MiLista<Nodo>) sucesor_d1).iterator();
+				Nodo B = (Nodo) it_d1.next();
+				if (B==null){
+					break;
+				}
+				
+				Lista<Nodo> sucesor_d2 = grafo.getSuc(B);
+				ListIterator it_d2 = ((MiLista<Nodo>) sucesor_d2).iterator();
+				Nodo C = (Nodo) it_d2.next();
+				if (C==null){
+					break;
+				}
+				sal = C.toString().contains("Selva");
 			}
 			i++;
 		}
-		
 		return sal;
+	}
+	
+	public static int horaFutura(Graph grafo,Nodo n){
+		Lista<Nodo> sucesores = grafo.getSuc(n);
+		ListIterator it = ((MiLista<Nodo>) sucesores).iterator();
+		int hora = (n.horas()+6)%24 ;
+		int i = 0;
+		while (i!=sucesores.getSize()){
+			Nodo A = (Nodo) it.next();
+			if(sucesores.getSize()==3 && A.esCaminable()){
+				
+				hora = (A.horasTipo()+ hora)%24;
+			}
+			
+			if(sucesores.getSize()==2 && A.toString().contains("d1")){
+				Lista<Nodo> sucesor_d1 = grafo.getSuc(A);
+				ListIterator it_d1 = ((MiLista<Nodo>) sucesor_d1).iterator();
+				Nodo B = (Nodo) it_d1.next();
+				if (B==null){
+					break;
+				}
+				hora = (A.horasTipo()+ B.horasTipo() + hora)%24;
+
+			}
+			
+			if(sucesores.getSize()==1 && A.toString().contains("d2")){
+				Lista<Nodo> sucesor_d1 = grafo.getSuc(A);
+				ListIterator it_d1 = ((MiLista<Nodo>) sucesor_d1).iterator();
+				Nodo B = (Nodo) it_d1.next();
+				if (B==null){
+					break;
+				}
+				
+				Lista<Nodo> sucesor_d2 = grafo.getSuc(B);
+				ListIterator it_d2 = ((MiLista<Nodo>) sucesor_d2).iterator();
+				Nodo C = (Nodo) it_d2.next();
+				if (C==null){
+					break;
+				}
+				hora = (A.horasTipo()+ B.horasTipo()+C.horasTipo() + hora)%24;
+			}
+			i++;
+		}
+		return hora;
 	}
 }
 

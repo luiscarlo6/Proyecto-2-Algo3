@@ -29,7 +29,8 @@ public class Nodo {
 	*/
   public Nodo (String i) {
 	 this.id = new String(i);
-	 this.horas = 2147483647;
+//	 this.horas = 2147483647;
+	 this.horas = -1;
   }
   
   /**
@@ -127,6 +128,10 @@ public class Nodo {
   
   public boolean esLlanura(){
 	  return this.esCaminable() && this.id.contains("Llanura");
+  }
+  
+  public boolean esBosque(){
+	  return this.esCaminable() && this.id.contains("Bosque");
   }
 } /*Fin de nodo*/
 

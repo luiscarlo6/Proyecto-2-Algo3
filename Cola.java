@@ -38,4 +38,8 @@ public class Cola<E> {
 	public String toString(){
 		return this.lista.toString();
 	}
+	
+	public void clear(){
+		this.lista.clear();
+	}
 }

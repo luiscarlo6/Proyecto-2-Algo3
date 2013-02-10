@@ -55,4 +55,6 @@ public interface Lista<E> {
   
   public String toString();
   
+  public void clear();
+  
 }
