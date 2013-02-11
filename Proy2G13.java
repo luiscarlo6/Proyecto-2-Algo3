@@ -34,7 +34,7 @@ public class Proy2G13 {
 					i = 0;
 					while (i!=numCasos){
 						if (S.hasNextLine()){
-							 G=bfs.llenar(S.nextLine());
+							 G=bfs.llenar(S.nextLine(),i);
 							 if(G.getNumNodos()!=0){
 								  s = new Nodo("S");
 								  bfs.BFS(G,s);

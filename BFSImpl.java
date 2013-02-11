@@ -90,7 +90,7 @@ public class BFSImpl {
 	 * Genera un grafo segun el modelo propuesto a partir de una cadena
 	 * de caracteres que cumpla el formato establecido en el problema
 	 */
-public static Graph llenar(String entr) {
+public static Graph llenar(String entr, int NumCaso) {
 		Graph grafo = new DiGraphHash();
 		int Pos=-1;
 		int len = entr.length();
@@ -194,6 +194,19 @@ public static Graph llenar(String entr) {
 		B = A;
 		}
 
+		if(Pos>0){
+		  System.out.println("El caracter S no esta de primero en el String");
+		}
+		
+		switch(len){
+		  case 0 : Mensaje(1,NumCaso+1);
+					  break;
+					  
+		  case 1: Mensaje(2,NumCaso+1);
+					 break;
+		}
+	
+		
 		return grafo;
 	}
 
@@ -423,7 +436,17 @@ public static Graph llenar(String entr) {
 		return -1;
   }
 	
+	private static void Mensaje(int Tipo, int Nso){
+		switch(Tipo){
+		  case 1: System.out.println(String.format("La linea esta vacia, caso %d etiquetado con -1",Nso ));
+					 break;
+			
+		  case 2: System.out.println(String.format("El string no respeta el formato, caso %d etiquetado con -1",Nso ));
+					 break;
+		}
 	
+		
+	}
 	
 	
 }
