@@ -47,7 +47,7 @@ public class Cola<E> {
 	}
 
 	/**
-	 * ´retorna el numero de elementos en la cola 
+	 * retorna el numero de elementos en la cola 
 	 */
 	public int tam(){
 		return this.lista.getSize();

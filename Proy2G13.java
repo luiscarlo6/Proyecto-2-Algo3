@@ -44,7 +44,7 @@ public class Proy2G13 {
 								  else
 										escribirResultado(pw,-1,i);
 							 }else{
-								  escribirResultado(pw,-1,i);
+										escribirResultado(pw,-1,i);
 							 }
 						}
 						else{

@@ -93,9 +93,7 @@ public class BFSImpl {
 public static Graph llenar(String entr) {
 		Graph grafo = new DiGraphHash();
 		int Pos=-1;
-		System.out.println(entr);
 		int len = entr.length();
-		System.out.println(len);
 		
 		Pos=buscarS(entr); 
 		if(len!=0 && len>=2 && len<=1000 && Pos!=-1){
@@ -108,7 +106,7 @@ public static Graph llenar(String entr) {
 		  }
 		grafo.add(A);
 		B = A;
-		for (int i=Pos;i!=len-1;i++){
+		for (int i=Pos+1;i!=len-1;i++){
 
 		  
 		  if(validarEntrada(java.lang.Character.toString(lect[i]))){
