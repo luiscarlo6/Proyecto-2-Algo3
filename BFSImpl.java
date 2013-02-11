@@ -95,20 +95,23 @@ public static Graph llenar(String entr, int NumCaso) {
 		int Pos=-1;
 		int len = entr.length();
 		
-		Pos=buscarS(entr); 
+		Pos=buscarS(entr); //chequeo si entr tiene a S
 		if(len!=0 && len>=2 && len<=1000 && Pos!=-1){
 		Nodo A,B;
 		char lect[] = entr.toCharArray();
 		A = new Nodo(java.lang.Character.toString(lect[Pos]));
+		
+		// se valida que el caracter sea S,D, * o .
 		if(validarEntrada(java.lang.Character.toString(lect[Pos]))){
 				grafo = new DiGraphHash();
 				return grafo;
 		  }
+		//si la cadena contiene a S se agrega  
 		grafo.add(A);
 		B = A;
 		for (int i=Pos+1;i!=len-1;i++){
 
-		  
+		  // se valida que el caracter sea S,D, * o .
 		  if(validarEntrada(java.lang.Character.toString(lect[i]))){
 				grafo = new DiGraphHash();
 				return grafo;
@@ -122,6 +125,8 @@ public static Graph llenar(String entr, int NumCaso) {
 				tipo = "Selva";
 				
 			}
+			
+			//creo los nodos segun el tipo y los enumero segun su pos
 			A = new Nodo(tipo+i);
 			grafo.add(A);
 			Nodo A1,A2,A3;
@@ -132,6 +137,8 @@ public static Graph llenar(String entr, int NumCaso) {
 			grafo.add(A1);
 			grafo.add(A2);
 			grafo.add(A3);
+			
+			//Genero y agrego todos los arcos correspondientes (Ver informe)
 			
 			Arco arco;
 			arco = new Arco(B.toString(),A.toString());
@@ -155,8 +162,13 @@ public static Graph llenar(String entr, int NumCaso) {
 			B = A;
 		}
 		
+		 //finalmente genero el Nodo "D", que deberia ser el ultimo 
+       //caracter de la entrada, si el ultimo no es "D"
+        //el archivo no cumple con el formato del enunciado
+		
 		A = new Nodo(java.lang.Character.toString(lect[len-1]));
 		
+		// se valida que el caracter sea S,D, * o .
 		if(validarEntrada(java.lang.Character.toString(lect[len-1]))){
 				grafo = new DiGraphHash();
 				return grafo;
@@ -172,6 +184,8 @@ public static Graph llenar(String entr, int NumCaso) {
 		grafo.add(A2);
 		grafo.add(A3);
 		
+		
+		//Genero y agrego todos los arcos correspondientes (Ver informe)
 		Arco arco;
 		arco = new Arco(B.toString(),A.toString());
 		grafo.add(arco);
@@ -414,7 +428,9 @@ public static Graph llenar(String entr, int NumCaso) {
 	
 	
 	
-	
+  /**
+	 * Metodo que chequea que el caracter sea valido
+	 */
   private static boolean validarEntrada(String caracter){
 		boolean Comper1=true, Comper2=true,Comper3=true,Comper4=true;
 				Comper1 = caracter.equalsIgnoreCase("s");
@@ -425,6 +441,9 @@ public static Graph llenar(String entr, int NumCaso) {
   }
 	
 	
+	/**
+	  * Busca la posicion de S en el String
+		*/
 	  
   private static int buscarS (String entrada){
 	 char lect[] = entrada.toCharArray();
@@ -435,6 +454,11 @@ public static Graph llenar(String entr, int NumCaso) {
 		}
 		return -1;
   }
+	
+	
+	/**
+	 * Imprime mensajes por pantalla
+	 */
 	
 	private static void Mensaje(int Tipo, int Nso){
 		switch(Tipo){

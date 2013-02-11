@@ -28,16 +28,19 @@ public class Proy2G13 {
 				//Escribimos en el Archivo lo deseado
 
 
-				numCasos=buscarEntero(S);
-
+				numCasos=buscarEntero(S);//se optiene 
+				
+				
+				//se chequea que t sea valido
 				if (numCasos!=-1 && numCasos<=100 && numCasos>=1){
 					i = 0;
+					//se itera el numero T sin importar que hallan mas lineas
 					while (i!=numCasos){
 						if (S.hasNextLine()){
 							 G=bfs.llenar(S.nextLine(),i);
 							 if(G.getNumNodos()!=0){
 								  s = new Nodo("S");
-								  bfs.BFS(G,s);
+								  bfs.BFS(G,s); //se realiza bfs sobre el caso
 								  D = G.get(new Nodo("D"));
 								  if (D!=null)
 										escribirResultado(pw,D.horas(),i);
@@ -88,8 +91,14 @@ public class Proy2G13 {
 		}	
 	}
 
+	
+	
+	/**
+	  *	Funcion que optiene el entero del archivo
+	  *	@return el entero o -1 si el archivo no tiene dicho entero
+	  */
 
-  public static int buscarEntero(Scanner s){
+  private static int buscarEntero(Scanner s){
 	 //int resultado = -1;
 	 int Temp=-1;
 	 try{
@@ -114,9 +123,11 @@ public class Proy2G13 {
 	 }
   }
 
-  
+  /**
+	 *	Realiza la escritura sobre el archivo F
+	 */
  
-	public static void escribirResultado(PrintWriter F, int Resultado, int NumCaso){
+	private static void escribirResultado(PrintWriter F, int Resultado, int NumCaso){
 		F.println(String.format("Caso %d:\t%d", NumCaso+1,Resultado));
 	}
 }
