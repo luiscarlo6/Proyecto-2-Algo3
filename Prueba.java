@@ -6,30 +6,29 @@ public class Prueba {
 
   public static int buscarEntero(Scanner s){
 	 //int resultado = -1;
-	 int Temp=-10;
+	 int Temp=-1;
 	 try{
-			//k=1;  
-		String ValorLeido = s.nextLine();
+
 		
 		
-		
-		
-		while(s.hasNextLine()){ 	 //Mientras aún haya enteros no leídos en el archivo
-		  
-		  
-		  
-		  Scanner Aux=new Scanner(ValorLeido);
-		  
-		   Temp= Aux.nextInt();
-		  while(Aux.hasNextInt()){
-			 //Temp= Aux.nextInt();
-			 return Temp;
-			 }
-			 
-			ValorLeido = s.nextLine(); //Se lee toda la linea
-			return Temp;
-		  }
-		  	return Temp;
+		while(s.hasNextLine()){
+				  String ValorLeido = s.nextLine();
+			 		if (ValorLeido.length() == 0){
+						  //ValorLeido = s.nextLine();
+						  continue;
+						  
+			 		}else{
+						Scanner Aux=new Scanner(ValorLeido);
+						
+						while(Aux.hasNextInt()){
+						  Temp=Aux.nextInt();
+						  return Temp;
+						}//fin while
+						//ValorLeido=s.nextLine();
+			 		}
+		}//fin while
+
+		return Temp;
 	 }catch(java.util.InputMismatchException e){
 		  return -1;
 	 }
