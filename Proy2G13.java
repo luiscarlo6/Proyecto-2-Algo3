@@ -30,24 +30,22 @@ public class Proy2G13 {
 
 				numCasos=buscarEntero(S);
 
-				if (numCasos!=-1 && numCasos<=100){
+				if (numCasos!=-1 && numCasos<=100 && numCasos>=1){
 					i = 0;
 					while (i!=numCasos){
 						if (S.hasNextLine()){
-							String lectura = S.nextLine();
-							if (lectura.length()<2 || lectura.length()>1000){
-								System.out.println("El archivo tiene el formato incorrecto");
-								break;
-							}
-							G = bfs.llenar(lectura);
-							if (G.getNumNodos()<2){
-								System.out.println("El archivo tiene el formato incorrecto");
-								break;
-							}
-							s = new Nodo("S");
-							bfs.BFS(G,s);
-							D = G.get(new Nodo("D"));
-							escribirResultado(pw,D.horas(),i);
+							 G=bfs.llenar(S.nextLine());
+							 if(G.getNumNodos()!=0){
+								  s = new Nodo("S");
+								  bfs.BFS(G,s);
+								  D = G.get(new Nodo("D"));
+								  if (D!=null)
+										escribirResultado(pw,D.horas(),i);
+								  else
+										escribirResultado(pw,-1,i);
+							 }else{
+								  escribirResultado(pw,-1,i);
+							 }
 						}
 						else{
 							if (numCasos!=0){
@@ -91,24 +89,33 @@ public class Proy2G13 {
 	}
 
 
-	public static int buscarEntero(Scanner s){
-		int Temp=-1;
+  public static int buscarEntero(Scanner s){
+	 //int resultado = -1;
+	 int Temp=-1;
+	 try{
+		while(s.hasNextLine()){
+				  String ValorLeido = s.nextLine();
+			 		if (ValorLeido.length() == 0){
+						  continue;
+					  
+			 		}else{
+						Scanner Aux=new Scanner(ValorLeido);
+						
+						while(Aux.hasNextInt()){
+						  Temp=Aux.nextInt();
+						  if(Temp > -1)
+							 return Temp;
+						}//fin while
+			 		}
+		}//fin while
+		return -1;
+	 }catch(java.util.InputMismatchException e){
+		  return -1;
+	 }
+  }
 
-		if (!s.hasNextLine()||!s.hasNextInt()){
-			return -1;
-		}
-
-		String ValorLeido = s.nextLine();
-		if (ValorLeido.length() != 0){
-			Scanner Aux=new Scanner(ValorLeido);
-			while(Aux.hasNextInt()){
-				Temp=Aux.nextInt();
-			}//fin while
-			Aux.close();  
-		}
-		return Temp;
-	}
-
+  
+ 
 	public static void escribirResultado(PrintWriter F, int Resultado, int NumCaso){
 		F.println(String.format("Caso %d:\t%d", NumCaso+1,Resultado));
 	}

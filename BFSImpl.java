@@ -90,123 +90,114 @@ public class BFSImpl {
 	 * Genera un grafo segun el modelo propuesto a partir de una cadena
 	 * de caracteres que cumpla el formato establecido en el problema
 	 */
-	public Graph llenar(String entr) {
+public static Graph llenar(String entr) {
 		Graph grafo = new DiGraphHash();
-
-		int len = entr.length();//tamaño del String
+		int Pos=-1;
+		System.out.println(entr);
+		int len = entr.length();
+		System.out.println(len);
+		
+		Pos=buscarS(entr); 
+		if(len!=0 && len>=2 && len<=1000 && Pos!=-1){
 		Nodo A,B;
-		char lect[] = entr.toCharArray();//convierto el string en arreglo
-		//crear Nodo del primer elemento, deberia ser una "S"
-		A = new Nodo(java.lang.Character.toString(lect[0]));
-		//si no es S, el archivo no cumple el formato del enunciado
-		if (!A.toString().equalsIgnoreCase("S")){
-			System.out.print("El archivo tiene el formato incorrecto");
-			return grafo;
-		}
+		char lect[] = entr.toCharArray();
+		A = new Nodo(java.lang.Character.toString(lect[Pos]));
+		if(validarEntrada(java.lang.Character.toString(lect[Pos]))){
+				grafo = new DiGraphHash();
+				return grafo;
+		  }
 		grafo.add(A);
 		B = A;
-		//itero sobre el resto del String hasta la penultima posicion 
-		for (int i=1;i!=len-1;i++){
-			String tipo = "";
-			String caracter = java.lang.Character.toString(lect[i]);
-			//si en el resto del String hay un caracter que no es "*" o "."
-			//el archivo no cumple con el formato del enunciado
-			if (!(caracter.equalsIgnoreCase("*")||
-					caracter.equalsIgnoreCase("."))){
-				System.out.print("El archivo tiene el formato incorrecto");
-				return new DiGraphHash();
-			}
+		for (int i=Pos;i!=len-1;i++){
 
-			//asigno los atributos a los nodos, Llanura si leo "."
-			//y Selva si leo "*"
-			if (caracter.equalsIgnoreCase(".")){
+		  
+		  if(validarEntrada(java.lang.Character.toString(lect[i]))){
+				grafo = new DiGraphHash();
+				return grafo;
+		  }
+		
+			String tipo = "";
+			if (java.lang.Character.toString(lect[i]).equalsIgnoreCase(".")){
 				tipo = "Llanura";
 			}
-			if (caracter.equalsIgnoreCase("*")){
+			if (java.lang.Character.toString(lect[i]).equalsIgnoreCase("*")){
 				tipo = "Selva";
+				
 			}
-
-			//creo los nodos segun el tipo y los enumero segun su pos
 			A = new Nodo(tipo+i);
-			//Agrego el nodo y creo los tres para dormir (Ver informe)
 			grafo.add(A);
 			Nodo A1,A2,A3;
 			A1 = new Nodo(tipo+i+"_d1");
 			A2 = new Nodo(tipo+i+"_d2");
 			A3 = new Nodo(tipo+i+"_d3");
-
+			
 			grafo.add(A1);
 			grafo.add(A2);
 			grafo.add(A3);
-
-			//Genero y agrego todos los arcos correspondientes (Ver informe)
+			
 			Arco arco;
 			arco = new Arco(B.toString(),A.toString());
 			grafo.add(arco);
-
+			
 			arco = new Arco(B.toString(),A1.toString());
 			grafo.add(arco);
-
+			
 			arco = new Arco(B.toString(),A2.toString());
 			grafo.add(arco);
-
+			
 			arco = new Arco(A2.toString(),A3.toString());
 			grafo.add(arco);
-
+			
 			arco = new Arco(A1.toString(),A.toString());
 			grafo.add(arco);
-
+			
 			arco = new Arco(A3.toString(),A.toString());
 			grafo.add(arco);
-
+			
 			B = A;
 		}
-		//finalmente genero el Nodo "D", que deberia ser el ultimo 
-		//caracter de la entrada, si el ultimo no es "D"
-		//el archivo no cumple con el formato del enunciado
+		
 		A = new Nodo(java.lang.Character.toString(lect[len-1]));
-		if (!A.toString().equalsIgnoreCase("D")){
-			System.out.print("El archivo tiene el formato incorrecto");
-			return new DiGraphHash();
-		}
-
-		//Genero sus nodos y sus arcos segun el modelo (Ver informe)
-
+		
+		if(validarEntrada(java.lang.Character.toString(lect[len-1]))){
+				grafo = new DiGraphHash();
+				return grafo;
+		  }
+		
 		grafo.add(A);
 		Nodo A1,A2,A3;
 		A1 = new Nodo(java.lang.Character.toString(lect[len-1])+"_d1");
 		A2 = new Nodo(java.lang.Character.toString(lect[len-1])+"_d2");
 		A3 = new Nodo(java.lang.Character.toString(lect[len-1])+"_d3");
-
+		
 		grafo.add(A1);
 		grafo.add(A2);
 		grafo.add(A3);
-
+		
 		Arco arco;
 		arco = new Arco(B.toString(),A.toString());
 		grafo.add(arco);
-
+		
 		arco = new Arco(B.toString(),A1.toString());
 		grafo.add(arco);
-
+		
 		arco = new Arco(B.toString(),A2.toString());
 		grafo.add(arco);
-
+		
 		arco = new Arco(A2.toString(),A3.toString());
 		grafo.add(arco);
-
+		
 		arco = new Arco(A1.toString(),A.toString());
 		grafo.add(arco);
-
+		
 		arco = new Arco(A3.toString(),A.toString());
 		grafo.add(arco);
-
+		
 		B = A;
+		}
 
 		return grafo;
 	}
-
-
 
 	/**
 	 * A partir de un grafo y un nodo, elimina el camino mas corto hacia el
@@ -409,5 +400,33 @@ public class BFSImpl {
 		}
 		return hora;
 	}
+	
+	
+	
+	
+  private static boolean validarEntrada(String caracter){
+		boolean Comper1=true, Comper2=true,Comper3=true,Comper4=true;
+				Comper1 = caracter.equalsIgnoreCase("s");
+				Comper2 = caracter.equalsIgnoreCase(".");
+				Comper3 = caracter.equalsIgnoreCase("*");
+				Comper4 = caracter.equalsIgnoreCase("d");
+			return (!Comper1 && !Comper2 && !Comper3 && !Comper4);
+  }
+	
+	
+	  
+  private static int buscarS (String entrada){
+	 char lect[] = entrada.toCharArray();
+		for(int i=0; i!= entrada.length();i++){
+		  if (java.lang.Character.toString(lect[i]).equalsIgnoreCase("s")){
+				  return i;
+			 }
+		}
+		return -1;
+  }
+	
+	
+	
+	
 }
 
