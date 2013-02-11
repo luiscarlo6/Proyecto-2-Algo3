@@ -32,6 +32,8 @@ public class Proy2G13 {
 				
 				  numCasos=buscarEntero(S);
 				  
+				  if(numCasos>=1 && numCasos<=100){
+				  
 
 				System.out.println(numCasos);
 				i=1;
@@ -39,29 +41,43 @@ public class Proy2G13 {
 				if (S.hasNextLine()){
 
 								G=llenar(S.nextLine());
+							if(G.getNumNodos()!=0){
 								s = new Nodo("S");
 								BFS(G,s);
 								D = G.get(new Nodo("D"));
 								escribirResultado(pw,D.horas(),i);
-
+							}else{
+							escribirResultado(pw,-1,i);
+							}
 				i=2;
 				while(i <= numCasos && numCasos>=0){
-					//G= new DiGraphHash();
+
 				  if (S.hasNextLine()){
 						 G=llenar(S.nextLine());
+						 if(G.getNumNodos()!=0){
 						 s = new Nodo("S");
 						 BFS(G,s);
 						 D = G.get(new Nodo("D"));
 						 escribirResultado(pw,D.horas(),i);
+					
+					}else{
+							escribirResultado(pw,-1,i);
+							}
 				  }
 				  i++;
 				}
-
+			 
 		  //Cerramos el archivo
-				archivoOut.close();
+
 		  
 		}  
-		} catch (FileNotFoundException e){
+		}else{
+		  System.out.println("T no es valido");
+		
+		} 
+		
+			archivoOut.close();
+		}catch (FileNotFoundException e){
 		  System.out.println("El archivo de entrada no se encuentra");
 		}catch(IOException e){
 		  System.out.println("El archivo no existe pero no puede ser creado");
@@ -302,6 +318,8 @@ public class Proy2G13 {
 
 		System.out.println(entr);
 		int len = entr.length();
+		System.out.println(len);
+		if(len!=0 && len>=2 && len<=1000){
 		Nodo A,B;
 		char lect[] = entr.toCharArray();
 		A = new Nodo(java.lang.Character.toString(lect[0]));
@@ -380,6 +398,7 @@ public class Proy2G13 {
 		grafo.add(arco);
 		
 		B = A;
+		}
 
 		return grafo;
 	}
