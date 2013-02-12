@@ -5,7 +5,7 @@
  * Luiscarlo Rivera, 09-11020
  * Jose Prado, 09-11006
  * 
- * Proyecto 1
+ * Proyecto 2
  */
 
 public interface ListIterator<E> {

@@ -5,7 +5,7 @@
  * Luiscarlo Rivera, 09-11020
  * Jose Prado, 09-11006
  * 
- * Proyecto 1
+ * Proyecto 2
  */
 public class MiLista<E> implements Lista<E>{
 	/**
@@ -16,7 +16,6 @@ public class MiLista<E> implements Lista<E>{
 	private int tam = 0;
 	private Caja<E> centinela = null;
 
-
 	/**
 	 * Constructor
 	 */
@@ -25,7 +24,6 @@ public class MiLista<E> implements Lista<E>{
 		this.centinela = new Caja<E>(null);
 		this.centinela.cambiarAnterior(this.centinela);
 		this.centinela.cambiarSiguiente(this.centinela);
-
 	}
 
 	/**
@@ -33,7 +31,6 @@ public class MiLista<E> implements Lista<E>{
 	 */
 	@Override
 	public boolean add(E element) {
-
 
 		if (element==null) {
 			return false;
