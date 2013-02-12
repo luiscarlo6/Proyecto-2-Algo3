@@ -645,7 +645,7 @@ public class DiGraphHash implements Graph{
 		int i=0;
 		boolean esta = false;
 		while(i!=nodos.getSize() && !esta){
-			Nodo A = (Nodo)it.next();
+			Nodo A = it.next();
 			esta = n.equals(A);
 			if (esta){
 				out = A;

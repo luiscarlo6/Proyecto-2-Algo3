@@ -28,33 +28,39 @@ public class Proy2G13 {
 				//Escribimos en el Archivo lo deseado
 
 
-				numCasos=buscarEntero(S);//se optiene 
-				
-				
+				numCasos=buscarEntero(S);//se obtiene 
+
+
 				//se chequea que t sea valido
-				if (numCasos!=-1 && numCasos<=100 && numCasos>=1){
+				if (numCasos!=-1 && numCasos<=100 && numCasos>=0){
 					i = 0;
 					//se itera el numero T sin importar que hallan mas lineas
 					while (i!=numCasos){
 						if (S.hasNextLine()){
-							 G=bfs.llenar(S.nextLine(),i);
-							 if(G.getNumNodos()!=0){
-								  s = new Nodo("S");
-								  bfs.BFS(G,s); //se realiza bfs sobre el caso
-								  D = G.get(new Nodo("D"));
-								  if (D!=null)
-										escribirResultado(pw,D.horas(),i);
-								  else
-										escribirResultado(pw,-1,i);
-							 }else{
-										escribirResultado(pw,-1,i);
-							 }
+							String lectura = S.nextLine();
+							if (lectura.length()<2 || lectura.length()>1000){
+								escribirResultado(pw,-1,i);
+								i++;
+								continue;
+							}
+							G=bfs.llenar(lectura);
+							if(!(G.getNumNodos()<2)){
+								s = new Nodo("S");
+								bfs.BFS(G,s); //se realiza bfs sobre el caso
+								D = G.get(new Nodo("D"));
+								if (D!=null){
+									escribirResultado(pw,D.horas(),i);
+								}
+								else{
+									escribirResultado(pw,-1,i);
+								}
+							}
+							else{
+								escribirResultado(pw,-1,i);
+							}
 						}
 						else{
-							if (numCasos!=0){
-								System.out.print("El archivo tiene el formato incorrecto");
-							}
-							break;
+							escribirResultado(pw,-1,i);
 						}
 						i++;
 					}
@@ -63,7 +69,7 @@ public class Proy2G13 {
 
 				}
 				else{
-					System.out.print("El archivo tiene el formato incorrecto");
+					System.out.println("El archivo tiene el formato incorrecto");
 				}
 
 			}
@@ -91,43 +97,37 @@ public class Proy2G13 {
 		}	
 	}
 
-	
-	
+
+
 	/**
-	  *	Funcion que optiene el entero del archivo
-	  *	@return el entero o -1 si el archivo no tiene dicho entero
-	  */
+	 *	Funcion que optiene el entero del archivo
+	 *	@return el entero o -1 si el archivo no tiene dicho entero
+	 */
 
-  private static int buscarEntero(Scanner s){
-	 //int resultado = -1;
-	 int Temp=-1;
-	 try{
-		while(s.hasNextLine()){
-				  String ValorLeido = s.nextLine();
-			 		if (ValorLeido.length() == 0){
-						  continue;
-					  
-			 		}else{
-						Scanner Aux=new Scanner(ValorLeido);
-						
-						while(Aux.hasNextInt()){
-						  Temp=Aux.nextInt();
-						  if(Temp > -1)
-							 return Temp;
-						}//fin while
-			 		}
-		}//fin while
-		return -1;
-	 }catch(java.util.InputMismatchException e){
-		  return -1;
-	 }
-  }
+	private static int buscarEntero(Scanner s){
+		int Temp=-1;
 
-  /**
+		if (!s.hasNextLine()||!s.hasNextInt()){
+			return -1;
+		}
+
+		String ValorLeido = s.nextLine();
+		if (ValorLeido.length() != 0){
+			Scanner Aux=new Scanner(ValorLeido);
+			while(Aux.hasNextInt()){
+				Temp=Aux.nextInt();
+			}//fin while
+			Aux.close();  
+		}
+		return Temp;
+	}
+
+	/**
 	 *	Realiza la escritura sobre el archivo F
 	 */
- 
-	private static void escribirResultado(PrintWriter F, int Resultado, int NumCaso){
+
+	private static void escribirResultado(PrintWriter F, int Resultado,
+			int NumCaso){
 		F.println(String.format("Caso %d:\t%d", NumCaso+1,Resultado));
 	}
 }

@@ -63,7 +63,7 @@ public class BFSImpl {
 			//itero sobre la lista de sucesores
 			int i = 0;
 			while (i!=sucesores.getSize()){
-				Nodo m = (Nodo)it.next();
+				Nodo m = it.next();
 				//Obtengo el nodo del grafo
 				m = grafo.get(m);
 
@@ -90,137 +90,117 @@ public class BFSImpl {
 	 * Genera un grafo segun el modelo propuesto a partir de una cadena
 	 * de caracteres que cumpla el formato establecido en el problema
 	 */
-public static Graph llenar(String entr, int NumCaso) {
+	public Graph llenar(String entr) {
 		Graph grafo = new DiGraphHash();
-		int Pos=-1;
-		int len = entr.length();
-		
-		Pos=buscarS(entr); //chequeo si entr tiene a S
-		if(len!=0 && len>=2 && len<=1000 && Pos!=-1){
+
+		int len = entr.length();//tamaño del String
 		Nodo A,B;
-		char lect[] = entr.toCharArray();
-		A = new Nodo(java.lang.Character.toString(lect[Pos]));
-		
-		// se valida que el caracter sea S,D, * o .
-		if(validarEntrada(java.lang.Character.toString(lect[Pos]))){
-				grafo = new DiGraphHash();
-				return grafo;
-		  }
-		//si la cadena contiene a S se agrega  
+		char lect[] = entr.toCharArray();//convierto el string en arreglo
+		//crear Nodo del primer elemento, deberia ser una "S"
+		A = new Nodo(java.lang.Character.toString(lect[0]));
+		//si no es S, el archivo no cumple el formato del enunciado
+		if (!A.toString().equalsIgnoreCase("S")){
+			return grafo;
+		}
 		grafo.add(A);
 		B = A;
-		for (int i=Pos+1;i!=len-1;i++){
-
-		  // se valida que el caracter sea S,D, * o .
-		  if(validarEntrada(java.lang.Character.toString(lect[i]))){
-				grafo = new DiGraphHash();
-				return grafo;
-		  }
-		
+		for (int i=1;i!=len-1;i++){
 			String tipo = "";
-			if (java.lang.Character.toString(lect[i]).equalsIgnoreCase(".")){
+			String caracter = java.lang.Character.toString(lect[i]);
+			//si en el resto del String hay un caracter que no es "*" o "."
+			//el archivo no cumple con el formato del enunciado
+			if (!(caracter.equalsIgnoreCase("*")||
+					caracter.equalsIgnoreCase("."))){
+				return new DiGraphHash();
+			}
+
+			//asigno los atributos a los nodos, Llanura si leo "."
+			//y Selva si leo "*"
+			if (caracter.equalsIgnoreCase(".")){
 				tipo = "Llanura";
 			}
-			if (java.lang.Character.toString(lect[i]).equalsIgnoreCase("*")){
+			if (caracter.equalsIgnoreCase("*")){
 				tipo = "Selva";
-				
 			}
-			
+
 			//creo los nodos segun el tipo y los enumero segun su pos
 			A = new Nodo(tipo+i);
+			//Agrego el nodo y creo los tres para dormir (Ver informe)
 			grafo.add(A);
 			Nodo A1,A2,A3;
 			A1 = new Nodo(tipo+i+"_d1");
 			A2 = new Nodo(tipo+i+"_d2");
 			A3 = new Nodo(tipo+i+"_d3");
-			
+
 			grafo.add(A1);
 			grafo.add(A2);
 			grafo.add(A3);
-			
+
 			//Genero y agrego todos los arcos correspondientes (Ver informe)
-			
+
 			Arco arco;
 			arco = new Arco(B.toString(),A.toString());
 			grafo.add(arco);
-			
+
 			arco = new Arco(B.toString(),A1.toString());
 			grafo.add(arco);
-			
+
 			arco = new Arco(B.toString(),A2.toString());
 			grafo.add(arco);
-			
+
 			arco = new Arco(A2.toString(),A3.toString());
 			grafo.add(arco);
-			
+
 			arco = new Arco(A1.toString(),A.toString());
 			grafo.add(arco);
-			
+
 			arco = new Arco(A3.toString(),A.toString());
 			grafo.add(arco);
-			
+
 			B = A;
 		}
-		
-		 //finalmente genero el Nodo "D", que deberia ser el ultimo 
-       //caracter de la entrada, si el ultimo no es "D"
-        //el archivo no cumple con el formato del enunciado
-		
+
+		//finalmente genero el Nodo "D", que deberia ser el ultimo 
+		//caracter de la entrada, si el ultimo no es "D"
+		//el archivo no cumple con el formato del enunciado
+
 		A = new Nodo(java.lang.Character.toString(lect[len-1]));
-		
-		// se valida que el caracter sea S,D, * o .
-		if(validarEntrada(java.lang.Character.toString(lect[len-1]))){
-				grafo = new DiGraphHash();
-				return grafo;
-		  }
-		
+		if (!A.toString().equalsIgnoreCase("D")){
+			return new DiGraphHash();
+		}
+
 		grafo.add(A);
 		Nodo A1,A2,A3;
 		A1 = new Nodo(java.lang.Character.toString(lect[len-1])+"_d1");
 		A2 = new Nodo(java.lang.Character.toString(lect[len-1])+"_d2");
 		A3 = new Nodo(java.lang.Character.toString(lect[len-1])+"_d3");
-		
+
 		grafo.add(A1);
 		grafo.add(A2);
 		grafo.add(A3);
-		
-		
+
 		//Genero y agrego todos los arcos correspondientes (Ver informe)
 		Arco arco;
 		arco = new Arco(B.toString(),A.toString());
 		grafo.add(arco);
-		
+
 		arco = new Arco(B.toString(),A1.toString());
 		grafo.add(arco);
-		
+
 		arco = new Arco(B.toString(),A2.toString());
 		grafo.add(arco);
-		
+
 		arco = new Arco(A2.toString(),A3.toString());
 		grafo.add(arco);
-		
+
 		arco = new Arco(A1.toString(),A.toString());
 		grafo.add(arco);
-		
+
 		arco = new Arco(A3.toString(),A.toString());
 		grafo.add(arco);
-		
-		B = A;
-		}
 
-		if(Pos>0){
-		  System.out.println("El caracter S no esta de primero en el String");
-		}
-		
-		switch(len){
-		  case 0 : Mensaje(1,NumCaso+1);
-					  break;
-					  
-		  case 1: Mensaje(2,NumCaso+1);
-					 break;
-		}
-	
-		
+		B = A;
+
 		return grafo;
 	}
 
@@ -239,7 +219,7 @@ public static Graph llenar(String entr, int NumCaso) {
 		//Itero sobre los sucesores
 		while (i!=sucesores.getSize()){
 			//Obtengo algun sucesor
-			Nodo A = (Nodo) it.next();
+			Nodo A = it.next();
 
 			//Si tengo tres sucesores (Nunca tendra mas de tres, Ver informe)
 			//y estoy en el sucesor que es Selva Llanura
@@ -255,7 +235,7 @@ public static Graph llenar(String entr, int NumCaso) {
 				//Llanura, Selva o D (Ver Informe)
 				Lista<Nodo> sucesor_d1 = grafo.getSuc(A);
 				ListIterator<Nodo> it_d1 = ((MiLista<Nodo>) sucesor_d1).iterator();
-				Nodo B = (Nodo) it_d1.next();
+				Nodo B = it_d1.next();
 				if (B==null){
 					break;
 				}
@@ -272,7 +252,7 @@ public static Graph llenar(String entr, int NumCaso) {
 				//el nodo para dormir "d3"
 				Lista<Nodo> sucesor_d2 = grafo.getSuc(A);
 				ListIterator<Nodo> it_d2 = ((MiLista<Nodo>) sucesor_d2).iterator();
-				Nodo B = (Nodo) it_d2.next();
+				Nodo B = it_d2.next();
 				if (B==null){
 					break;
 				}
@@ -282,7 +262,7 @@ public static Graph llenar(String entr, int NumCaso) {
 				//Llanura, Selva o D (Ver Informe)
 				Lista<Nodo> sucesor_d3 = grafo.getSuc(B);
 				ListIterator<Nodo> it_d3 = ((MiLista<Nodo>) sucesor_d3).iterator();
-				Nodo C = (Nodo) it_d3.next();
+				Nodo C = it_d3.next();
 				if (C==null){
 					break;
 				}
@@ -316,24 +296,24 @@ public static Graph llenar(String entr, int NumCaso) {
 		ListIterator<Nodo> it = ((MiLista<Nodo>) sucesores).iterator();
 		boolean sal = false;
 		int i = 0;
-		
+
 		//itero sobre los sucesores
 		while (i!=sucesores.getSize()){
-			Nodo A = (Nodo) it.next();
-			
+			Nodo A = it.next();
+
 			//si tiene tres sucesores, reviso en el sucesor que
 			//no es para dormir si es selva
 			if(sucesores.getSize()==3 && A.esCaminable()){
 				sal = A.toString().contains("Selva");
 			}
-			
+
 			//Si tiene dos sucesores, busco el sucesor para dormir "d1"
 			//y verico si su sucesor (que es Selva Llanura o "D", segun el
 			//modelo ) es Selva
 			if(sucesores.getSize()==2 && A.toString().contains("d1")){
 				Lista<Nodo> sucesor_d1 = grafo.getSuc(A);
 				ListIterator<Nodo> it_d1 = ((MiLista<Nodo>) sucesor_d1).iterator();
-				Nodo B = (Nodo) it_d1.next();
+				Nodo B = it_d1.next();
 				if (B==null){
 					break;
 				}
@@ -347,14 +327,14 @@ public static Graph llenar(String entr, int NumCaso) {
 			if(sucesores.getSize()==1 && A.toString().contains("d2")){
 				Lista<Nodo> sucesor_d1 = grafo.getSuc(A);
 				ListIterator<Nodo> it_d1 = ((MiLista<Nodo>) sucesor_d1).iterator();
-				Nodo B = (Nodo) it_d1.next();
+				Nodo B = it_d1.next();
 				if (B==null){
 					break;
 				}
 
 				Lista<Nodo> sucesor_d2 = grafo.getSuc(B);
 				ListIterator<Nodo> it_d2 = ((MiLista<Nodo>) sucesor_d2).iterator();
-				Nodo C = (Nodo) it_d2.next();
+				Nodo C =  it_d2.next();
 				if (C==null){
 					break;
 				}
@@ -380,7 +360,7 @@ public static Graph llenar(String entr, int NumCaso) {
 		//itero sobre los sucesores
 		int i = 0;
 		while (i!=sucesores.getSize()){
-			Nodo A = (Nodo) it.next();
+			Nodo A =  it.next();
 			//si tiene tres sucesores el camino mas corto es 
 			//directamente hacia el nodo Llanura,Selva o "D"
 			if(sucesores.getSize()==3 && A.esCaminable()){
@@ -393,7 +373,7 @@ public static Graph llenar(String entr, int NumCaso) {
 			if(sucesores.getSize()==2 && A.toString().contains("d1")){
 				Lista<Nodo> sucesor_d1 = grafo.getSuc(A);
 				ListIterator<Nodo> it_d1 = ((MiLista<Nodo>) sucesor_d1).iterator();
-				Nodo B = (Nodo) it_d1.next();
+				Nodo B = it_d1.next();
 				if (B==null){
 					break;
 				}
@@ -407,14 +387,14 @@ public static Graph llenar(String entr, int NumCaso) {
 			if(sucesores.getSize()==1 && A.toString().contains("d2")){
 				Lista<Nodo> sucesor_d1 = grafo.getSuc(A);
 				ListIterator<Nodo> it_d1 = ((MiLista<Nodo>) sucesor_d1).iterator();
-				Nodo B = (Nodo) it_d1.next();
+				Nodo B = it_d1.next();
 				if (B==null){
 					break;
 				}
 
 				Lista<Nodo> sucesor_d2 = grafo.getSuc(B);
 				ListIterator<Nodo> it_d2 = ((MiLista<Nodo>) sucesor_d2).iterator();
-				Nodo C = (Nodo) it_d2.next();
+				Nodo C = it_d2.next();
 				if (C==null){
 					break;
 				}
@@ -425,53 +405,4 @@ public static Graph llenar(String entr, int NumCaso) {
 		}
 		return hora;
 	}
-	
-	
-	
-  /**
-	 * Metodo que chequea que el caracter sea valido
-	 */
-  private static boolean validarEntrada(String caracter){
-		boolean Comper1=true, Comper2=true,Comper3=true,Comper4=true;
-				Comper1 = caracter.equalsIgnoreCase("s");
-				Comper2 = caracter.equalsIgnoreCase(".");
-				Comper3 = caracter.equalsIgnoreCase("*");
-				Comper4 = caracter.equalsIgnoreCase("d");
-			return (!Comper1 && !Comper2 && !Comper3 && !Comper4);
-  }
-	
-	
-	/**
-	  * Busca la posicion de S en el String
-		*/
-	  
-  private static int buscarS (String entrada){
-	 char lect[] = entrada.toCharArray();
-		for(int i=0; i!= entrada.length();i++){
-		  if (java.lang.Character.toString(lect[i]).equalsIgnoreCase("s")){
-				  return i;
-			 }
-		}
-		return -1;
-  }
-	
-	
-	/**
-	 * Imprime mensajes por pantalla
-	 */
-	
-	private static void Mensaje(int Tipo, int Nso){
-		switch(Tipo){
-		  case 1: System.out.println(String.format("La linea esta vacia, caso %d etiquetado con -1",Nso ));
-					 break;
-			
-		  case 2: System.out.println(String.format("El string no respeta el formato, caso %d etiquetado con -1",Nso ));
-					 break;
-		}
-	
-		
-	}
-	
-	
 }
-
