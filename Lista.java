@@ -1,3 +1,4 @@
+
 /**
  * Interfaz que define el comportamiento de una lista
  * 
@@ -56,5 +57,4 @@ public interface Lista<E> {
 	public String toString();
 
 	public void clear();
-
 }

@@ -1,3 +1,4 @@
+
 /**
  * Interfaz que define el uso de un grafo.
  * Luiscarlo Rivera, 09-11020
@@ -99,7 +100,7 @@ public interface Graph {
 	public String toString();
 
 	public int colisiones();
-	
+
 	/**
 	 * Retorna el nodo n. Si no existe dicho nodo, 
 	 * retorna null.

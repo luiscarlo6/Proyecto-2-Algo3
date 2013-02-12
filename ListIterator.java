@@ -1,3 +1,4 @@
+
 /**
  * Interfaz que describe un iterador sobre listas.
  * Es una interface parametrizada con tipo (clase) E.
@@ -7,7 +8,6 @@
  * 
  * Proyecto 2
  */
-
 public interface ListIterator<E> {
 
 	/**
