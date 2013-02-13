@@ -9,37 +9,6 @@
 public class BFSImpl {
 
 
-	public static void main(String[] args) {
-		BFSImpl bfs = new BFSImpl();
-//		Graph G = bfs.llenar("S****...*.*.*.**.*****.............*****.*.*.*.*.***.***...........***.***.**.****........***.**.*.***.**.***...........D");
-		Graph G = bfs.llenar("S...............**D");
-		//		System.out.println(G.toString());
-		//		Object sucs[] = G.getSuc(new Nodo("S")).toArray();
-
-		//		Lista<Nodo> nodos = G.getNodos();
-		//		ListIterator<Nodo> itN = ((MiLista<Nodo>) nodos).iterator();
-		////		Nodo ant = new Nodo("S");
-		//		for (int i =1;i!=nodos.getSize();i++){
-		//			Nodo a = itN.next();
-		//			System.out.println(a.toString() +" "+a.esSelva());
-		//		}
-
-
-		//		Lista<Nodo> sucesores = G.getNodos();
-		//		ListIterator<Nodo> it = ((MiLista<Nodo>) sucesores).iterator();
-		//		Nodo ant = new Nodo("S");
-		//		for (int i =1;i!=8;i++){
-		////			System.out.print(ant+" "+i+" ");
-		//			int sig = horaFutura(G, ant,i);
-		////			System.out.println(sig);
-		//		}
-
-
-		bfs.BFS(G, new Nodo("S"));
-		Nodo d = new Nodo("D");
-		d = G.get(d);
-		System.out.println(d.horas());
-	}
 	/**
 	 * Metodo que dado un nodo, si este pertenece aplica una version
 	 * modificada de el algoritmo BFS para hallar el tiempo de alcanzabilidad
