@@ -8,6 +8,38 @@
  */
 public class BFSImpl {
 
+
+	public static void main(String[] args) {
+		BFSImpl bfs = new BFSImpl();
+//		Graph G = bfs.llenar("S****...*.*.*.**.*****.............*****.*.*.*.*.***.***...........***.***.**.****........***.**.*.***.**.***...........D");
+		Graph G = bfs.llenar("S...............**D");
+		//		System.out.println(G.toString());
+		//		Object sucs[] = G.getSuc(new Nodo("S")).toArray();
+
+		//		Lista<Nodo> nodos = G.getNodos();
+		//		ListIterator<Nodo> itN = ((MiLista<Nodo>) nodos).iterator();
+		////		Nodo ant = new Nodo("S");
+		//		for (int i =1;i!=nodos.getSize();i++){
+		//			Nodo a = itN.next();
+		//			System.out.println(a.toString() +" "+a.esSelva());
+		//		}
+
+
+		//		Lista<Nodo> sucesores = G.getNodos();
+		//		ListIterator<Nodo> it = ((MiLista<Nodo>) sucesores).iterator();
+		//		Nodo ant = new Nodo("S");
+		//		for (int i =1;i!=8;i++){
+		////			System.out.print(ant+" "+i+" ");
+		//			int sig = horaFutura(G, ant,i);
+		////			System.out.println(sig);
+		//		}
+
+
+		bfs.BFS(G, new Nodo("S"));
+		Nodo d = new Nodo("D");
+		d = G.get(d);
+		System.out.println(d.horas());
+	}
 	/**
 	 * Metodo que dado un nodo, si este pertenece aplica una version
 	 * modificada de el algoritmo BFS para hallar el tiempo de alcanzabilidad
@@ -27,26 +59,33 @@ public class BFSImpl {
 			Nodo n = cola.primero();
 			cola.desencolar();
 			//Calculo de la hora segun el camino proximo mas corto
-			int hora = horaFutura(grafo, n);
+			Nodo sig = sig(grafo,n);
+			boolean siguienteSelva = sig!=null && sig.esSelva(); 
+			int horaActual = (n.horas() + 6) % 24;
+			int cotaSelva = Math.abs(horaActual-18);				
+			int hora = horaFutura(grafo, n, cotaSelva);
 			//bolleano que identifica si sera de noche en el proximo nodo
 			boolean nocheFutura = ((hora >= 18 && hora <= 23) || (hora < 6 && hora >= 0));
+			boolean noche =((horaActual >= 18 && horaActual <= 23) || (horaActual < 6 && horaActual >= 0));
 			int h = 0;
 			//ciclo de condiciones para dormir, si no puede dormir el ciclo
 			//hara mas de tres iteraciones y gerenerara condiciones de 
 			//parada para el resto del algoritmo y la cola
-			while (n.esCaminable() && ((horasCaminadas == 16) && n.esLlanura())
-					|| (sigSelva(grafo, n) && nocheFutura)) {
+			while (n.esCaminable() && (((horasCaminadas == 16) && n.esLlanura())
+					|| (sigSelva(grafo, n,cotaSelva) && nocheFutura)||(siguienteSelva && noche))) {
 
 				//duerme si no sera de noche o si se encuentra en una llanura
 				if (!nocheFutura || n.esLlanura()) {
 					boolean durmio = dormir(grafo, n);
 					if (durmio) {
 						horasCaminadas = 0;
+						horaActual=(horaActual+8)%24;
 					}
 				}
 
-				hora = horaFutura(grafo, n);
+				hora = horaFutura(grafo, n,cotaSelva);
 				nocheFutura = ((hora >= 18 && hora <= 23) || (hora < 6 && hora >= 0));
+				noche =((horaActual >= 18 && horaActual <= 23) || (horaActual < 6 && horaActual >= 0));
 				h++;
 				//genera condiciones para detener el ciclo de la cola y
 				//el resto del algoritmo
@@ -80,7 +119,7 @@ public class BFSImpl {
 			}
 			//si se encuentra en un nodo que no es para dormir
 			//aumenta las horas caminadas en 1
-			if (n.esCaminable() && !n.equals(s)) {
+			if (n!=null && n.esCaminable()) {
 				horasCaminadas++;
 			}
 		}
@@ -286,55 +325,24 @@ public class BFSImpl {
 	 * es una Selva 
 	 * retorna true si es Selva, false en otro caso
 	 */
-	private static boolean sigSelva(Graph grafo, Nodo n) {
-		//Obtengo los sucesores de n
-		Lista<Nodo> sucesores = grafo.getSuc(n);
-		ListIterator<Nodo> it = ((MiLista<Nodo>) sucesores).iterator();
+	private static boolean sigSelva(Graph grafo, Nodo n, int NumerodeSelvas) {
+		if (n.equals(new Nodo("D"))){
+			return false;
+		}
+		
 		boolean sal = false;
-		int i = 0;
-
-		//itero sobre los sucesores
-		while (i != sucesores.getSize()) {
-			Nodo A = it.next();
-
-			//si tiene tres sucesores, reviso en el sucesor que
-			//no es para dormir si es selva
-			if (sucesores.getSize() == 3 && A.esCaminable()) {
-				sal = A.toString().contains("Selva");
+		Nodo siguiente = sig(grafo,n);
+		if (siguiente==null){
+			return false;
+		}
+		int i =0;
+		while(i!=NumerodeSelvas){			
+			if (siguiente.esLlanura()||siguiente.equals(new Nodo("D"))){
+				return false;
 			}
-
-			//Si tiene dos sucesores, busco el sucesor para dormir "d1"
-			//y verico si su sucesor (que es Selva Llanura o "D", segun el
-			//modelo ) es Selva
-			if (sucesores.getSize() == 2 && A.toString().contains("d1")) {
-				Lista<Nodo> sucesor_d1 = grafo.getSuc(A);
-				ListIterator<Nodo> it_d1 = ((MiLista<Nodo>) sucesor_d1).iterator();
-				Nodo B = it_d1.next();
-				if (B == null) {
-					break;
-				}
-				sal = B.toString().contains("Selva");
-			}
-
-			//Si tiene un sucesor, busco el sucesor para dormir "d2" el sucesor
-			// de este que es "d3" segun el modelo (Ver informe)
-			//y reviso el sucesor de de "d3" para ver si es selva
-			if (sucesores.getSize() == 1 && A.toString().contains("d2")) {
-				Lista<Nodo> sucesor_d1 = grafo.getSuc(A);
-				ListIterator<Nodo> it_d1 = ((MiLista<Nodo>) sucesor_d1).iterator();
-				Nodo B = it_d1.next();
-				if (B == null) {
-					break;
-				}
-
-				Lista<Nodo> sucesor_d2 = grafo.getSuc(B);
-				ListIterator<Nodo> it_d2 = ((MiLista<Nodo>) sucesor_d2).iterator();
-				Nodo C = it_d2.next();
-				if (C == null) {
-					break;
-				}
-				sal = C.toString().contains("Selva");
-			}
+			sal = siguiente.esSelva();
+			Nodo ant = siguiente;
+			siguiente = sig(grafo,ant);
 			i++;
 		}
 		return sal;
@@ -345,14 +353,39 @@ public class BFSImpl {
 	 * si recorre el camino mas corto hasta el proximo nodo Selva, Llanura o "D"
 	 * retorna un entero que representa la hora en formato 24 horas
 	 */
-	private static int horaFutura(Graph grafo, Nodo n) {
+	private static int horaFutura(Graph grafo, Nodo n, int NumerodeSelvas) {
+		Lista<Nodo> sucesores = grafo.getSuc(n);
+		int hora = (n.horas() + 6) % 24;
+
+		Nodo siguiente = n;
+		//itero sobre los sucesores
+		for (int u =0; u!=NumerodeSelvas;u++){
+			if (sucesores.getSize() == 3) {
+				//calculo la nueva hora
+				hora = (siguiente.horasTipo() + hora) % 24;
+			}
+
+			if (sucesores.getSize() == 2) {
+				//calculo la nueva hora
+				hora = (siguiente.horasTipo() + hora+8) % 24;
+			}
+
+			if (sucesores.getSize() == 1) {
+				//calculo la nueva hora
+				hora = (siguiente.horasTipo() + hora+16) % 24;
+			}
+			siguiente = sig(grafo,siguiente);
+			sucesores = grafo.getSuc(siguiente);
+
+		}
+		return hora;
+	}
+
+	private static Nodo sig(Graph grafo,Nodo n){
+		Nodo siguiente = null;
 		//Obtengo los sucesores del nodo n
 		Lista<Nodo> sucesores = grafo.getSuc(n);
 		ListIterator<Nodo> it = ((MiLista<Nodo>) sucesores).iterator();
-		//calculo la hora actual, comienza a las 6 y le sumo
-		//las horas transcurridas para alcanzar a el nodo n
-		int hora = (n.horas() + 6) % 24;
-		//itero sobre los sucesores
 		int i = 0;
 		while (i != sucesores.getSize()) {
 			Nodo A = it.next();
@@ -360,7 +393,7 @@ public class BFSImpl {
 			//directamente hacia el nodo Llanura,Selva o "D"
 			if (sucesores.getSize() == 3 && A.esCaminable()) {
 				//calculo la nueva hora
-				hora = (A.horasTipo() + hora) % 24;
+				siguiente = A;
 			}
 
 			//si tiene dos sucesores, el camino mas corto es pasar por
@@ -373,7 +406,7 @@ public class BFSImpl {
 					break;
 				}
 				//Calculo la nueva hora
-				hora = (A.horasTipo() + B.horasTipo() + hora) % 24;
+				siguiente = B;
 			}
 
 			//Si tiene un sucesor solo esta el camino de ir a "d2",
@@ -393,10 +426,13 @@ public class BFSImpl {
 					break;
 				}
 				//calculo la nueva hora
-				hora = (A.horasTipo() + B.horasTipo() + C.horasTipo() + hora) % 24;
+
+				siguiente = C;
 			}
+
+
 			i++;
 		}
-		return hora;
+		return siguiente;
 	}
 }

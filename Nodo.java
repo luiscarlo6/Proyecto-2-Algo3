@@ -154,7 +154,7 @@ public class Nodo {
 	/**
 	 * dice si el nodo es Llanura
 	 */
-	public boolean esLlanura() {
+	public boolean esLlanura() {		
 		return this.esCaminable() && this.id.contains("Llanura");
 	}
 
@@ -162,6 +162,6 @@ public class Nodo {
 	 * dice si el nodo es Selva
 	 */
 	public boolean esSelva() {
-		return this.esCaminable() && this.id.contains("Bosque");
+		return this.esCaminable() && this.id.contains("Selva");
 	}
 } /*Fin de nodo*/

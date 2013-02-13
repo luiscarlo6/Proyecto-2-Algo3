@@ -25,6 +25,7 @@ public class Proy2G13 {
 		Nodo s, D;
 		BFSImpl bfs = new BFSImpl();
 		if (args.length == 2) {
+
 			try {
 				archivoIn = new File(args[0]);
 				S = new Scanner(archivoIn);
@@ -67,20 +68,26 @@ public class Proy2G13 {
 						i++;
 					}
 					//Cerramos el archivo
+
 					archivoOut.close();
 				} else {
 					System.out.println("El archivo tiene el formato incorrecto");
 				}
-			} catch (FileNotFoundException e) {
+			}
+			catch (FileNotFoundException e) {
 				System.out.println("El archivo de entrada no se encuentra");
-			} catch (IOException e) {
+			} 
+			catch (IOException e) {
 				System.out.println("El archivo no existe pero no puede ser creado");
 				System.out.println(" o no puede ser abierto por cualquier razon.");
-			} catch (java.lang.NullPointerException as) {
-			} finally {
+			} 
+//			catch (java.lang.NullPointerException as) {
+//			} 
+			finally {
 				try {
 					S.close();
-				} catch (Exception e) {
+				} 
+				catch (Exception e) {
 					System.out.println("Error");
 				}
 			}
@@ -106,7 +113,7 @@ public class Proy2G13 {
 			while (Aux.hasNextInt()) {
 				Temp = Aux.nextInt();
 			}//fin while
-				Aux.close();
+			Aux.close();
 		}
 		return Temp;
 	}
